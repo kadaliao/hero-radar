@@ -1,0 +1,1970 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#15122b">
+<meta name="description" content="漫威 × DC 角色识别特训：看头像、认道具、猜剪影，答得越多画面和音乐越燃。">
+<meta property="og:title" content="英雄雷达 · MARVEL × DC">
+<meta property="og:description" content="看头像、认道具、猜剪影。答得越多，画面和音乐越燃。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2315122b'/%3E%3Cpath d='M18 46 L30 30 L46 46 Z' fill='%23ef3d3d'/%3E%3Cpath d='M32 46 L32 30 L46 46 Z' fill='%233d7bff'/%3E%3Ccircle cx='32' cy='30' r='14' fill='%23f7f1e3' stroke='%230b0918' stroke-width='3'/%3E%3Crect x='21' y='25' width='22' height='10' rx='5' fill='%230b0918'/%3E%3Ccircle cx='27' cy='30' r='2.4' fill='%23ffd23f'/%3E%3Ccircle cx='37' cy='30' r='2.4' fill='%23ffd23f'/%3E%3Cpath d='M25 14 Q32 6 39 14 Z' fill='%23ffd23f'/%3E%3C/svg%3E">
+<title>英雄雷达</title>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Noto+Sans+SC:wght@400;700;900&family=ZCOOL+QingKe+HuangYou&display=swap">
+<style>
+/* Layout: one-column comic stage — a dark "ink" night, the question set as a printed paper panel, Marvel red × DC blue split accents. */
+:root{
+  --ink:#15122b; --ink-2:#1e1a3c; --panel:#292352; --panel-2:#342d66;
+  --paper:#f7f1e3; --paper-ink:#1a1530; --edge:#0b0918;
+  --muted:#a9a2cf; --pop:#ffd23f; --red:#ef3d3d; --blue:#3d7bff;
+  --ok:#33d69a; --miss:#c49bff; --line:rgba(247,241,227,.16); --line-2:rgba(247,241,227,.32);
+  --f-display:'ZCOOL QingKe HuangYou','Noto Sans SC','PingFang SC',system-ui,sans-serif;
+  --f-body:'Noto Sans SC','PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,sans-serif;
+  --f-num:'Bungee','ZCOOL QingKe HuangYou',system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--f-body);font-size:15px;line-height:1.55;-webkit-tap-highlight-color:transparent;overflow:hidden}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+#app{position:relative;z-index:1;height:100%;overflow-y:auto;overflow-x:hidden}
+#app.shake{animation:shake .32s}
+@keyframes shake{20%{transform:translate(-5px,3px)}40%{transform:translate(5px,-3px)}60%{transform:translate(-3px,-2px)}80%{transform:translate(3px,2px)}}
+.scr{max-width:540px;margin:0 auto;padding-inline:16px;padding-block:14px 28px;min-height:100%;display:flex;flex-direction:column;gap:14px}
+.scr.play{height:100%;min-height:0;padding-block:10px 14px;gap:10px;user-select:none;-webkit-user-select:none}
+h1,h2,h3{margin:0;text-wrap:balance}
+.muted{color:var(--muted)}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:900;letter-spacing:.08em;padding:2px 7px;border-radius:999px;line-height:1.5;white-space:nowrap}
+.u-M{background:var(--red);color:#fff}
+.u-D{background:var(--blue);color:#fff}
+.btn{border:3px solid var(--edge);border-radius:14px;padding:12px 16px;font-weight:900;font-size:16px;background:var(--panel-2);color:var(--paper);box-shadow:4px 4px 0 var(--edge);transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--edge)}
+.btn.primary{background:var(--pop);color:var(--paper-ink)}
+.btn.red{background:var(--red);color:#fff}
+.btn.blue{background:var(--blue);color:#fff}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn small{display:block;font-weight:400;font-size:12px;opacity:.8}
+.ibtn{width:38px;height:38px;border-radius:12px;border:2px solid var(--line-2);background:var(--ink-2);display:grid;place-items:center;font-size:16px;flex:none}
+.ibtn.off{opacity:.45;text-decoration:line-through}
+
+/* ---------- title ---------- */
+.t-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.streak{font-size:13px;color:var(--muted)}
+.streak b{font-family:var(--f-num);color:var(--pop);font-size:16px;font-weight:400}
+.logo{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;padding-block:6px 0}
+.logo h1{font-family:var(--f-display);font-weight:400;font-size:clamp(48px,15vw,76px);line-height:.95;letter-spacing:.02em;color:var(--pop);text-shadow:4px 4px 0 var(--edge),-1px -1px 0 var(--edge),1px -1px 0 var(--edge),-1px 1px 0 var(--edge)}
+.logo h1 span{display:block;font-family:var(--f-num);font-size:.26em;letter-spacing:.12em;color:var(--paper);text-shadow:2px 2px 0 var(--edge);margin-top:8px}
+.logo p{margin:8px 0 0;color:var(--muted);font-size:14px}
+.logo .bibi{width:118px}
+.mainbtns{display:grid;gap:10px}
+.mainbtns .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn.big{font-size:20px;padding:16px}
+.card{background:var(--ink-2);border:2px solid var(--line);border-radius:16px;padding:12px 14px}
+.card h3{font-size:13px;letter-spacing:.1em;color:var(--muted);font-weight:700;margin-bottom:8px;display:flex;justify-content:space-between;gap:8px}
+.quest{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding-block:6px}
+.quest+.quest{border-top:1px dashed var(--line)}
+.qbox{width:22px;height:22px;border-radius:6px;border:2px solid var(--line-2);display:grid;place-items:center;font-size:13px;font-weight:900}
+.quest.done .qbox{background:var(--ok);border-color:var(--ok);color:var(--paper-ink)}
+.quest.done .qname{color:var(--muted);text-decoration:line-through}
+.qprog{font-family:var(--f-num);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.qpractice{border:0;background:none;color:var(--pop);font-size:12px;padding:0;text-decoration:underline}
+.nav{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.nav button{border:2px solid var(--line);background:var(--ink-2);border-radius:14px;padding:10px 4px;display:grid;justify-items:center;gap:2px;font-weight:700;font-size:13px}
+.nav button b{font-family:var(--f-num);font-weight:400;font-size:15px;color:var(--pop)}
+.foot{font-size:11px;color:var(--muted);text-align:center;opacity:.8;margin-top:auto}
+.help-link{border:0;background:none;color:var(--muted);text-decoration:underline;font-size:13px;padding:0}
+
+/* ---------- play ---------- */
+.hud{display:flex;align-items:center;gap:8px}
+.prog{flex:1;display:flex;align-items:center;gap:8px;min-width:0}
+.prog-bar{flex:1;height:10px;border-radius:99px;background:var(--ink-2);border:2px solid var(--line);overflow:hidden}
+.prog-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--pop),var(--blue));transition:width .3s}
+.prog span,.clock{font-family:var(--f-num);font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.clock.extra{color:var(--pop);font-size:16px}
+.clock.warn{color:var(--red)}
+.meter{display:grid;grid-template-columns:1fr auto 64px;gap:10px;align-items:center}
+.energy{display:flex;align-items:baseline;gap:8px;min-width:0}
+.energy small,.combo small{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.1em}
+.energy b{font-family:var(--f-num);font-weight:400;font-size:28px;line-height:1;color:var(--pop);text-shadow:2px 2px 0 var(--edge);white-space:nowrap;display:inline-block}
+.energy b.bump{animation:bump .25s}
+@keyframes bump{50%{transform:scale(1.18)}}
+.combo{display:grid;grid-template-columns:auto auto;column-gap:4px;align-items:baseline;opacity:.35;transition:opacity .2s}
+.combo.on{opacity:1}
+.combo b{font-family:var(--f-num);font-weight:400;font-size:24px;line-height:1}
+.combo em{grid-column:1/-1;font-style:normal;font-size:11px;font-weight:900;color:var(--pop)}
+.ctime{grid-column:1/-1;height:4px;border-radius:9px;background:var(--line);overflow:hidden;margin-top:3px;width:84px}
+.ctime i{display:block;height:100%;width:0;background:var(--ok)}
+.ctime.low i{background:var(--red)}
+.mascot-mini .bibi{width:64px;display:block}
+.qcard{background:var(--paper);color:var(--paper-ink);border:3px solid var(--edge);border-radius:18px;box-shadow:6px 6px 0 var(--edge);padding:16px 18px 18px;display:flex;flex-direction:column;gap:10px;flex:0 1 auto;min-height:0;overflow-y:auto;position:relative;margin-top:8px}
+.qcard.enter{animation:enter .28s cubic-bezier(.2,1.4,.4,1)}
+@keyframes enter{from{transform:translateY(14px) scale(.96);opacity:0}}
+.qhead{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.kchip{background:var(--paper-ink);color:var(--pop);font-size:12px;font-weight:900;padding:3px 9px;border-radius:7px;letter-spacing:.06em}
+.xchip{background:var(--red);color:#fff;font-size:12px;font-weight:900;padding:3px 9px;border-radius:7px}
+.rchip{background:var(--miss);color:var(--paper-ink);font-size:12px;font-weight:900;padding:3px 9px;border-radius:7px}
+.qtitle{font-size:14px;font-weight:700;color:#5b5480}
+.qmain{font-family:var(--f-display);font-size:clamp(34px,10vw,48px);line-height:1.12;text-wrap:balance}
+.qmain.small{font-family:var(--f-body);font-weight:900;font-size:clamp(19px,5.4vw,24px);line-height:1.35}
+.qsub{font-size:14px;color:#4a4368}
+.sw{display:flex;gap:0;height:74px;border:3px solid var(--edge);border-radius:14px;overflow:hidden}
+.sw i{flex:1}
+.sw i:nth-child(1){flex:1.6}
+.clues{margin:0;padding:0;list-style:none;display:grid;gap:6px;counter-reset:c}
+.clues li{counter-increment:c;display:grid;grid-template-columns:24px 1fr;gap:8px;align-items:start;font-weight:700;font-size:16px;line-height:1.4}
+.clues li::before{content:counter(c);font-family:var(--f-num);font-weight:400;font-size:13px;width:24px;height:24px;border-radius:7px;background:var(--paper-ink);color:var(--pop);display:grid;place-items:center}
+.clues li.off{color:#a39cbc;font-weight:400}
+.clues li.off::before{background:#d8d0bd;color:#8a83a3}
+.clues li.new{animation:enter .3s}
+.qrow{display:flex;gap:14px;align-items:center}
+.qtext{min-width:0;flex:1;display:flex;flex-direction:column;gap:6px}
+.qart{flex:none;width:clamp(92px,28vw,124px);aspect-ratio:1}
+.qart.pt{border-radius:50%;overflow:hidden;border:3px solid var(--edge);background:#efe5cf}
+.qart.item{border-radius:18px;border:3px solid var(--edge);background:#fffaf0;padding:8px}
+.qart.big{width:min(200px,50vw);align-self:center}
+.qart.sil{border-radius:50%;overflow:hidden;border:3px solid var(--edge);background:radial-gradient(circle,#fff6cf 0 35%,#f2c12e 75%)}
+.qart.reveal{animation:stampIn .45s cubic-bezier(.2,1.5,.4,1)}
+.fact{display:flex;gap:10px;align-items:flex-start}
+.fav{width:34px;height:34px;flex:none;border-radius:50%;overflow:hidden;border:2px solid var(--edge);background:#efe5cf}
+.strip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;border:0;background:none;padding:0}
+.strip span{aspect-ratio:1;border-radius:50%;overflow:hidden;border:2px solid var(--edge);background:#efe5cf;box-shadow:2px 2px 0 var(--edge)}
+.strip span.sil{background:radial-gradient(circle,#fff6cf 0 35%,#f2c12e 75%)}
+.cx .face{display:block;aspect-ratio:1;background:#efe5cf}
+.cx.locked .face{background:radial-gradient(circle,#fff6cf 0 35%,#f2c12e 75%);opacity:.85}
+.cx .band{height:7px!important}
+.cxhead{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.cxpt{width:120px;height:120px;border-radius:50%;overflow:hidden;border:3px solid var(--edge);background:#efe5cf;flex:none}
+.cxpt.sil{background:radial-gradient(circle,#fff6cf 0 35%,#f2c12e 75%)}
+.cxit{width:78px;display:grid;gap:3px;justify-items:center;text-align:center}
+.cxit svg{width:72px;height:72px;background:#fffaf0;border:2px solid var(--edge);border-radius:14px;padding:5px}
+.cxit small{font-size:11px;color:var(--muted);line-height:1.3}
+.hintbtn{align-self:flex-start;border:2px dashed #8a83a3;background:none;color:#5b5480;border-radius:10px;padding:5px 10px;font-size:13px;font-weight:700}
+.fact{border-top:2px dashed #cfc6b0;padding-top:8px;font-size:14px;color:#3a3358;animation:enter .3s}
+.fact b{color:var(--paper-ink)}
+.fact .chip{margin-right:6px;vertical-align:1px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;flex:none;margin-top:auto}
+.opt{position:relative;border:3px solid var(--edge);border-radius:14px;background:var(--panel);box-shadow:4px 4px 0 var(--edge);min-height:66px;padding:8px 22px 8px 12px;text-align:left;display:flex;align-items:center;gap:9px;transition:transform .08s,background .15s;min-width:0}
+.otx{display:flex;flex-direction:column;min-width:0}
+.oav{width:46px;height:46px;flex:none;border-radius:50%;overflow:hidden;border:2px solid var(--edge);background:#efe5cf}
+.oav svg,.qart svg,.fav svg,.cx .face svg,.strip svg,.cxpt svg,.cxit svg{display:block;width:100%;height:100%}
+.opt:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--edge)}
+.opt b{font-size:17px;line-height:1.25;font-weight:900}
+.opt small{font-size:11.5px;color:var(--muted);line-height:1.3}
+.okey{position:absolute;right:8px;top:6px;font-family:var(--f-num);font-size:11px;color:var(--muted)}
+.opt.ng{border-style:dashed;border-color:var(--miss);background:var(--ink-2);opacity:.6;box-shadow:none;cursor:default}
+.opt.ng b{text-decoration:line-through;text-decoration-color:var(--miss)}
+.ngtag{position:absolute;right:8px;bottom:5px;font-style:normal;font-size:11px;font-weight:900;color:var(--miss)}
+.opt.ok{background:var(--ok);color:var(--paper-ink);animation:stamp .3s}
+.opt.ok small,.opt.ok .okey{color:#1e4d3a}
+.opt.dim{opacity:.35}
+@keyframes stamp{40%{transform:scale(1.06) rotate(-1.5deg)}}
+.opts.two .opt{min-height:78px}
+.opt .chip{align-self:flex-start;margin-bottom:3px}
+.tapnext{text-align:center;font-size:12px;color:var(--muted);flex:none;margin-top:-4px}
+
+/* ---------- mascot ---------- */
+.bibi .e-h,.bibi .e-o,.bibi .m-h,.bibi .m-o,.bibi .b-sweat{display:none}
+.bibi.cheer .e-n,.bibi.cheer .m-n,.bibi.oops .e-n,.bibi.oops .m-n{display:none}
+.bibi.cheer .e-h,.bibi.cheer .m-h{display:inline}
+.bibi.oops .e-o,.bibi.oops .m-o,.bibi.oops .b-sweat{display:inline}
+.bibi .b-all{transform-origin:60px 126px;animation:bob 2.4s ease-in-out infinite}
+.bibi.cheer .b-all{animation:jump .5s cubic-bezier(.3,1.6,.5,1)}
+.bibi.oops .b-all{animation:wob .5s}
+.bibi.dance:not(.cheer):not(.oops) .b-all{animation:dance .46s ease-in-out infinite alternate}
+.bibi .b-armL{transform-origin:30px 76px;transition:transform .2s}
+.bibi .b-armR{transform-origin:90px 76px;transition:transform .2s}
+.bibi.cheer .b-armL{transform:rotate(95deg)}
+.bibi.cheer .b-armR{transform:rotate(-95deg)}
+.bibi .b-blip{animation:blip 1.2s steps(2) infinite}
+@keyframes bob{50%{transform:translateY(-3px)}}
+@keyframes jump{40%{transform:translateY(-16px) scale(1.04)}}
+@keyframes wob{25%{transform:rotate(-9deg)}75%{transform:rotate(7deg)}}
+@keyframes dance{from{transform:rotate(-7deg) translateY(0)}to{transform:rotate(7deg) translateY(-6px)}}
+@keyframes blip{50%{opacity:.2}}
+
+/* ---------- comic pops, toasts, banner ---------- */
+#pops{position:fixed;inset:0;pointer-events:none;z-index:5;overflow:hidden}
+.pop{position:absolute;width:118px;height:118px;margin:-59px 0 0 -59px;display:grid;place-items:center;animation:popin .9s ease-out forwards;transform:rotate(var(--rot))}
+.pop svg{position:absolute;inset:0;width:100%;height:100%}
+.pop span{position:relative;font-family:var(--f-num);font-size:22px;color:var(--paper-ink);letter-spacing:.02em}
+@keyframes popin{0%{transform:rotate(var(--rot)) scale(.2);opacity:0}18%{transform:rotate(var(--rot)) scale(1.15);opacity:1}70%{opacity:1}100%{transform:rotate(var(--rot)) scale(1) translateY(-20px);opacity:0}}
+#toasts{position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:20;display:grid;justify-items:center;gap:6px;pointer-events:none;padding-inline:16px}
+.toast{background:var(--paper);color:var(--paper-ink);border:3px solid var(--edge);box-shadow:3px 3px 0 var(--edge);border-radius:12px;padding:7px 14px;font-weight:900;font-size:14px;animation:toast 2.8s forwards;max-width:100%}
+.toast small{display:block;font-weight:400;font-size:12px;color:#4a4368}
+@keyframes toast{0%{transform:translateY(-14px);opacity:0}8%,85%{transform:none;opacity:1}100%{opacity:0;transform:translateY(-8px)}}
+#banner{position:fixed;left:0;right:0;top:38%;z-index:6;pointer-events:none;text-align:center}
+#banner div{display:inline-block;font-family:var(--f-display);font-size:clamp(34px,10vw,54px);color:var(--pop);text-shadow:4px 4px 0 var(--edge),0 0 24px rgba(255,210,63,.5);animation:banner 1.5s forwards;padding-inline:16px}
+#banner div small{display:block;font-family:var(--f-num);font-size:.36em;color:var(--paper);letter-spacing:.1em}
+@keyframes banner{0%{transform:scale(2.4);opacity:0}15%{transform:scale(1);opacity:1}80%{opacity:1}100%{opacity:0;transform:scale(.9)}}
+
+/* ---------- result ---------- */
+.res-hero{display:grid;grid-template-columns:1fr auto;align-items:end;gap:8px;padding-top:8px}
+.res-hero h2{font-family:var(--f-display);font-weight:400;font-size:26px;color:var(--muted)}
+.score{font-family:var(--f-num);font-size:clamp(64px,22vw,104px);line-height:.9;color:var(--pop);text-shadow:5px 5px 0 var(--edge);animation:stampIn .5s cubic-bezier(.2,1.5,.4,1)}
+.score small{font-size:.3em;color:var(--paper)}
+@keyframes stampIn{from{transform:scale(2.2) rotate(-8deg);opacity:0}}
+.res-hero .bibi{width:96px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.stat{background:var(--ink-2);border:2px solid var(--line);border-radius:12px;padding:8px;display:grid;gap:2px;min-width:0}
+.stat small{font-size:11px;color:var(--muted);font-weight:700}
+.stat b{font-family:var(--f-num);font-weight:400;font-size:16px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.reslist{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.reslist li{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px}
+.tag{font-size:11px;font-weight:900;padding:2px 7px;border-radius:6px;background:var(--pop);color:var(--paper-ink)}
+.tag.up{background:var(--ok)}
+.tag.new{background:var(--blue);color:#fff}
+.newcx{display:flex;flex-wrap:wrap;gap:6px}
+.newcx span{border:2px solid var(--line-2);border-radius:999px;padding:2px 10px;font-size:13px;font-weight:700}
+.res-actions{position:sticky;bottom:0;display:grid;gap:8px;padding-block:10px 4px;background:linear-gradient(transparent,var(--ink) 30%)}
+.res-actions .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.extra-note{font-size:13px;color:var(--muted);text-align:center}
+
+/* ---------- tree ---------- */
+.subhead{display:flex;align-items:center;gap:10px}
+.subhead h2{font-family:var(--f-display);font-weight:400;font-size:28px;flex:1}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:4px;vertical-align:-1px;margin-right:4px;border:2px solid var(--line-2)}
+.tree{position:relative;display:grid;gap:26px;padding-block:6px 10px}
+.tlines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.trow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;justify-content:center;position:relative}
+.trow.c1{grid-template-columns:minmax(0,1fr);width:calc((100% - 24px)/4 + 0px);justify-self:center}
+.trow.c2{grid-template-columns:repeat(2,minmax(0,1fr));width:calc((100% - 24px)/2 + 8px);justify-self:center}
+.trow.c3{grid-template-columns:repeat(3,minmax(0,1fr));width:calc((100% - 24px)*3/4 + 16px);justify-self:center}
+.node{position:relative;border:3px solid var(--line-2);background:var(--ink-2);border-radius:14px;padding:8px 4px 7px;display:grid;justify-items:center;gap:1px;min-width:0;text-align:center}
+.node b{font-size:13px;line-height:1.25;font-weight:900}
+.node small{font-size:11px;color:var(--muted)}
+.node .stars{font-size:11px;color:var(--pop);letter-spacing:1px;min-height:14px}
+.node.lock{opacity:.42;border-style:dashed}
+.node.new{border-color:var(--pop)}
+.node.new::after{content:'NEW';position:absolute;top:-9px;right:-4px;background:var(--pop);color:var(--paper-ink);font-family:var(--f-num);font-size:9px;padding:1px 5px;border-radius:6px}
+.node.learn{border-color:var(--blue)}
+.node.master{background:var(--pop);border-color:var(--edge);color:var(--paper-ink);box-shadow:3px 3px 0 var(--edge)}
+.node.master small{color:#5b4a10}
+.node.master .stars{color:var(--red)}
+.node.rust{background:repeating-linear-gradient(135deg,#d9a441 0 6px,#c98d2e 6px 12px)}
+.node.rust::after{content:'生锈';position:absolute;top:-9px;right:-4px;background:#8d5524;color:#fff;font-size:10px;padding:1px 5px;border-radius:6px;font-weight:900}
+.rbar{height:4px;width:70%;border-radius:4px;background:var(--line);overflow:hidden;margin-top:2px}
+.rbar i{display:block;height:100%;background:var(--blue)}
+
+/* ---------- codex ---------- */
+.cxbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.cxbar input{flex:1 1 140px;min-width:0;background:var(--ink-2);border:2px solid var(--line-2);border-radius:12px;padding:8px 12px;color:var(--paper);font:inherit}
+.fchips{display:flex;gap:6px;flex-wrap:wrap}
+.fchips button{border:2px solid var(--line-2);background:var(--ink-2);border-radius:999px;padding:4px 12px;font-size:13px;font-weight:700}
+.fchips button[aria-pressed="true"]{background:var(--paper);color:var(--paper-ink);border-color:var(--paper)}
+.cxgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cx{border:3px solid var(--edge);border-radius:14px;overflow:hidden;background:var(--paper);color:var(--paper-ink);text-align:left;padding:0;display:flex;flex-direction:column;box-shadow:3px 3px 0 var(--edge)}
+.cx .band{display:flex}
+.cx .band i{flex:1}
+.cx .band i:first-child{flex:1.6}
+.cx .nm{padding:6px 8px 7px;display:grid;gap:1px;min-width:0}
+.cx .nm b{font-size:14px;line-height:1.25;font-weight:900;overflow-wrap:anywhere}
+.cx .nm small{font-size:10.5px;color:#5b5480;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cx .lv{font-size:10px;color:#8a6d00;letter-spacing:1px}
+.cx.locked{background:var(--ink-2);color:var(--muted);border-color:var(--line);box-shadow:none}
+.cx.locked .band{filter:grayscale(1) brightness(.45)}
+.cx.locked .nm small{color:var(--muted)}
+
+/* ---------- modal ---------- */
+#modal{position:fixed;inset:0;z-index:30;background:rgba(8,6,20,.72);display:grid;place-items:end center;padding-inline:12px;padding-bottom:max(12px,env(safe-area-inset-bottom,0px))}
+#modal .sheet{width:100%;max-width:520px;max-height:min(84vh,760px);overflow-y:auto;background:var(--ink-2);border:3px solid var(--edge);border-radius:20px;box-shadow:0 0 0 2px var(--line-2),6px 6px 0 var(--edge);padding:16px;animation:sheet .25s ease-out;display:grid;gap:12px}
+@keyframes sheet{from{transform:translateY(30px);opacity:0}}
+.sheet h2{font-family:var(--f-display);font-weight:400;font-size:26px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sheet .x{margin-left:auto}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:14px;margin:0}
+.kv dt{color:var(--muted);font-weight:700;white-space:nowrap}
+.kv dd{margin:0;min-width:0}
+.sheet ul{margin:0;padding-left:1.2em}
+.sheet p{margin:0}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{border:2px solid var(--line-2);background:var(--ink);border-radius:10px;padding:6px 14px;font-weight:700}
+.seg button[aria-pressed="true"]{background:var(--pop);color:var(--paper-ink);border-color:var(--pop)}
+.setrow{display:grid;gap:6px}
+.setrow > span{font-size:13px;color:var(--muted);font-weight:700}
+.troph{display:grid;grid-template-columns:36px 1fr auto;gap:10px;align-items:center;padding-block:6px;border-top:1px dashed var(--line)}
+.troph .medal{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-num);font-size:13px;background:var(--ink);border:2px solid var(--line-2);color:var(--muted)}
+.troph.got .medal{background:var(--pop);color:var(--paper-ink);border-color:var(--edge)}
+.troph b{font-size:14px}
+.troph small{display:block;font-size:12px;color:var(--muted)}
+.troph .tp{font-family:var(--f-num);font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.bigsw{display:flex;height:42px;border-radius:10px;overflow:hidden;border:2px solid var(--edge)}
+.bigsw i{flex:1}
+
+@media (min-width:600px){
+  .opt b{font-size:18px}
+  .cxgrid{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-height:640px){
+  .mascot-mini .bibi{width:48px}
+  .meter{grid-template-columns:1fr auto 48px}
+  .opt{min-height:56px}
+  .qmain{font-size:26px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div id="app">
+  <section id="scr-title" class="scr"></section>
+  <section id="scr-play" class="scr play" hidden>
+    <div class="hud">
+      <button class="ibtn" data-act="quit" aria-label="退出本局">✕</button>
+      <div class="prog"><div class="prog-bar"><i id="prog-fill"></i></div><span id="prog-txt">1 / 10</span></div>
+      <span class="clock" id="clock">0:00</span>
+      <button class="ibtn" data-act="mute" id="mute-btn" aria-label="声音开关">♪</button>
+    </div>
+    <div class="meter">
+      <div class="energy"><small>能量</small><b id="energy">1</b></div>
+      <div class="combo" id="combo"><b id="combo-n">0</b><small>连击</small><em id="combo-x">能量 ×1.0</em><div class="ctime" id="ctime"><i id="combo-fill"></i></div></div>
+      <div class="mascot-mini" id="mascot-play"></div>
+    </div>
+    <div class="qcard" id="qcard"></div>
+    <div class="opts" id="opts"></div>
+    <div class="tapnext" id="tapnext">&nbsp;</div>
+  </section>
+  <section id="scr-result" class="scr" hidden></section>
+  <section id="scr-tree" class="scr" hidden></section>
+  <section id="scr-codex" class="scr" hidden></section>
+</div>
+<div id="pops"></div>
+<div id="banner"></div>
+<div id="toasts" aria-live="polite"></div>
+<div id="modal" hidden><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
+
+<script>
+'use strict';
+/* =====================================================================
+   英雄雷达 — a Marvel × DC recognition drill.
+   Structure borrowed from dopa-drill: every correct answer escalates the
+   music and visuals, mistakes never end the run ("差一点" and retry),
+   a skill tree with mastery / stars / rust, a review list of missed
+   questions, daily quests and trophies. All data stays in localStorage.
+   ===================================================================== */
+
+// ------------------------------------------------------------------ data
+const TEAMS = {
+  avengers:{n:'复仇者联盟',u:'M'}, xmen:{n:'X 战警',u:'M'}, guardians:{n:'银河护卫队',u:'M'},
+  ff:{n:'神奇四侠',u:'M'}, hydra:{n:'九头蛇',u:'M'}, brotherhood:{n:'变种人兄弟会',u:'M'},
+  jl:{n:'正义联盟',u:'D'}, titans:{n:'少年泰坦',u:'D'}, glc:{n:'绿灯军团',u:'D'}, squad:{n:'自杀小队',u:'D'},
+};
+// f = fame tier (1 household name … 3 deep cut), v = villain / anti-hero
+const ENT = [
+// ---------------- Marvel
+{id:'ironman',u:'M',f:1,zh:'钢铁侠',en:'Iron Man',real:'托尼·斯塔克 Tony Stark',team:'avengers',home:'斯塔克大厦（纽约）',foe:'满大人',
+ it:[['方舟反应堆','胸口发光的微型能源装置，最初用来挡住逼近心脏的弹片']],pw:['身穿自己打造的动力装甲，掌心能发射斥力光束'],col:['#b3122b','#f2b632','#6d0c1a'],
+ cl:['亿万富翁、天才发明家','在山洞里用废料造出第一套装甲','胸口装着一个发光的能源装置','电影结尾当众公开了自己的英雄身份'],fact:'2008 年的《钢铁侠》开启了漫威电影宇宙（MCU）。'},
+{id:'cap',u:'M',f:1,zh:'美国队长',en:'Captain America',real:'史蒂夫·罗杰斯 Steve Rogers',team:'avengers',home:'布鲁克林（纽约）',foe:'redskull',
+ it:[['星条圆盾','几乎坚不可摧的圆盾，掷出去还能弹回来']],pw:['注射超级士兵血清，力量与速度达到人类极限'],col:['#1f3a93','#c8102e','#f5f5f5'],
+ cl:['二战时期的士兵','原本瘦弱，经过一次实验变得强壮','在冰里沉睡了几十年后被唤醒','武器是一面圆盾'],fact:'他首次登场于 1941 年，封面上一拳打在希特勒脸上。'},
+{id:'thor',u:'M',f:1,zh:'雷神',en:'Thor',real:'索尔·奥丁森 Thor Odinson',team:'avengers',home:'阿斯加德',foe:'loki',
+ it:[['妙尔尼尔','一把战锤，只有“配得上”的人才能举起'],['暴风战斧','（MCU）在尼达维阿尔锻造的战斧，可召唤彩虹桥']],pw:['操控雷电，以神之体魄作战'],col:['#c62828','#9ea7b3','#1b3a6b'],
+ cl:['来自另一个世界的神族王子','父亲是众神之王','武器只有配得上的人才能举起','能召唤雷电'],fact:'北欧神话里的雷神在 1962 年加入漫威漫画。'},
+{id:'hulk',u:'M',f:1,zh:'绿巨人',en:'Hulk',real:'布鲁斯·班纳 Bruce Banner',team:'avengers',foe:'憎恶',
+ it:[],pw:['越愤怒力量越大，伽马射线让他变身为绿色巨人'],col:['#3f8f3a','#6a3d9a','#2b2b2b'],
+ cl:['物理学家','一次伽马炸弹事故改变了他','一生气就会变身','外号“绿色大块头”'],fact:'1962 年最初登场时，他的皮肤其实是灰色的。'},
+{id:'spidey',u:'M',f:1,zh:'蜘蛛侠',en:'Spider-Man',real:'彼得·帕克 Peter Parker',home:'皇后区（纽约）',foe:'goblin',
+ it:[['蛛网发射器','戴在手腕上、能射出黏性蛛丝的装置']],pw:['被放射性蜘蛛咬过，能爬墙并拥有“蜘蛛感应”'],col:['#d32f2f','#1e4fa3','#151515'],
+ cl:['一名高中生','被一只特殊的蜘蛛咬了','叔叔教导他：能力越大，责任越大','在纽约楼宇间荡来荡去'],fact:'“能力越大，责任越大”是他的核心信条。'},
+{id:'widow',u:'M',f:1,zh:'黑寡妇',en:'Black Widow',real:'娜塔莎·罗曼诺夫 Natasha Romanoff',team:'avengers',
+ it:[['寡妇之刺','戴在手腕上的电击武器']],pw:['顶尖特工，精通格斗、潜入与审讯'],col:['#151515','#c62828','#555555'],
+ cl:['俄罗斯出身的特工','在“红房子”接受训练','没有超能力，靠格斗和谍报','后来加入神盾局和复仇者'],fact:'腰带上的红色沙漏标志来自黑寡妇蜘蛛。'},
+{id:'hawkeye',u:'M',f:2,zh:'鹰眼',en:'Hawkeye',real:'克林特·巴顿 Clint Barton',team:'avengers',
+ it:[['紫色机关箭','带爆炸、绳索等各种箭头的特制箭']],pw:['百发百中的神射手，几乎从不射偏'],col:['#5b2a86','#222222','#8a8a8a'],
+ cl:['马戏团出身','武器是弓箭','复仇者里少数没有超能力的人','代号来自一种猛禽的眼睛'],fact:'1964 年首次登场时，他其实是个反派。'},
+{id:'panther',u:'M',f:1,zh:'黑豹',en:'Black Panther',real:'特查拉 T’Challa',team:'avengers',home:'瓦坎达',foe:'杀戮者',
+ it:[['振金战衣','用振金编织的战衣，能吸收并释放冲击能量']],pw:['服用心形草，获得超越常人的力量与感官'],col:['#1a1a1a','#6c3fc5','#c0c0c0'],
+ cl:['一个非洲国家的国王','他的国家藏着一种珍稀金属','力量来自一种心形植物','代号是一种猫科动物'],fact:'他是美国主流漫画中第一位非裔超级英雄（1966）。'},
+{id:'strange',u:'M',f:1,zh:'奇异博士',en:'Doctor Strange',real:'斯蒂芬·斯特兰奇 Stephen Strange',home:'至圣所（纽约）',foe:'多玛暮',
+ it:[['阿戈摩托之眼','挂在胸前的护身符，MCU 中藏着时间宝石'],['悬浮斗篷','有自己意识、会主动护主的红色斗篷']],pw:['至尊法师，能画出传送门、施展各种咒术'],col:['#1f3c88','#b71c1c','#e0b84b'],
+ cl:['曾是傲慢的神经外科医生','一场车祸毁了他的双手','去卡玛泰姬学习神秘术','披着一件会自己动的斗篷'],fact:'至圣所的地址是布利克街 177A 号。'},
+{id:'wolverine',u:'M',f:1,zh:'金刚狼',en:'Wolverine',real:'罗根（詹姆斯·豪利特）Logan',team:'xmen',tx:['avengers'],home:'加拿大',foe:'剑齿虎',
+ it:[['艾德曼合金爪','从指节间伸出的三根金属利爪']],pw:['强大的自愈因子让伤口几乎瞬间愈合，骨骼包覆着合金'],col:['#f2c12e','#1d3f8f','#222222'],
+ cl:['来自加拿大','活了一百多年','脾气暴躁，爱抽雪茄','手上能伸出三根爪子'],fact:'他的首次完整登场是《无敌浩克》#181（1974），对手正是绿巨人。'},
+{id:'deadpool',u:'M',f:1,zh:'死侍',en:'Deadpool',real:'韦德·威尔逊 Wade Wilson',
+ it:[['双武士刀','背在身后的一对日本刀']],pw:['几乎杀不死的再生能力，还知道自己是漫画角色'],col:['#b71c1c','#151515','#e0e0e0'],
+ cl:['话多的雇佣兵','为治疗癌症参加了实验','全身疤痕，所以总戴着面罩','经常打破第四面墙和读者聊天'],fact:'据创作者说，Wade Wilson 这个名字是在调侃 DC 丧钟的 Slade Wilson。'},
+{id:'captainmarvel',u:'M',f:2,zh:'惊奇队长',en:'Captain Marvel',real:'卡罗尔·丹弗斯 Carol Danvers',team:'avengers',
+ it:[],pw:['吸收能量并以光子冲击释放，能在太空中飞行'],col:['#c62828','#1a3c8f','#f2c12e'],
+ cl:['美国空军飞行员','获得了克里人的力量','能徒手在太空中飞行','胸前有一颗金色星星'],fact:'DC 的沙赞最早也叫“Captain Marvel”，后来因商标问题改了名。'},
+{id:'scarlet',u:'M',f:2,zh:'绯红女巫',en:'Scarlet Witch',real:'旺达·马克西莫夫 Wanda Maximoff',team:'avengers',
+ it:[],pw:['掌握混沌魔法，能扭曲现实'],col:['#b0102a','#5a0a17','#e46a7a'],
+ cl:['来自东欧小国','有一个跑得飞快的双胞胎哥哥','能力是红色的能量','曾用魔法改写整个小镇的现实'],fact:'她的双胞胎哥哥是快银；漫画里两人曾长期被设定为万磁王的子女。'},
+{id:'antman',u:'M',f:2,zh:'蚁人',en:'Ant-Man',real:'斯科特·朗 Scott Lang',team:'avengers',home:'旧金山',
+ it:[['皮姆粒子','能改变物体大小的粒子，由汉克·皮姆发明']],pw:['能缩小到蚂蚁大小或变成巨人，还能指挥蚂蚁'],col:['#b71c1c','#222222','#8a8a8a'],
+ cl:['前科犯，出狱后想当个好爸爸','穿上一套特殊的战衣','能缩到昆虫那么小','能召唤蚂蚁帮忙'],fact:'初代蚁人是科学家汉克·皮姆，斯科特·朗是第二代。'},
+{id:'quicksilver',u:'M',f:2,zh:'快银',en:'Quicksilver',real:'皮特罗·马克西莫夫 Pietro Maximoff',team:'avengers',
+ it:[],pw:['以超音速奔跑，一头银白色头发'],col:['#c0c7d1','#2b5fb3','#eeeeee'],
+ cl:['银色头发','和妹妹是双胞胎','跑得比子弹还快','妹妹会红色魔法'],fact:'他的速度是天生的身体能力，而闪电侠的速度来自“神速力”。'},
+{id:'namor',u:'M',f:3,zh:'纳摩',en:'Namor',
+ it:[],pw:['海底王国之王，脚踝上的小翅膀能让他飞行'],col:['#2e7d32','#151515','#2a6db0'],
+ cl:['海底王国的国王','父亲是人类，母亲来自海底','脚踝长着小翅膀','漫威最早的角色之一（1939）'],fact:'纳摩 1939 年登场，比 DC 的海王（1941）还早两年。'},
+{id:'profx',u:'M',f:2,zh:'X 教授',en:'Professor X',real:'查尔斯·泽维尔 Charles Xavier',team:'xmen',home:'泽维尔天赋青少年学校',foe:'magneto',
+ it:[['脑波强化器','放大心灵感应、搜寻全球变种人的装置']],pw:['世界上最强的心灵感应者之一'],col:['#2b3a67','#f2c12e','#dddddd'],
+ cl:['坐在轮椅上','光头','创办了一所特殊学校','能读取和控制别人的思想'],fact:'他和万磁王是老朋友，却对人类与变种人的关系看法相反。'},
+{id:'magneto',u:'M',f:2,v:1,zh:'万磁王',en:'Magneto',real:'埃里克·兰谢尔 Erik Lehnsherr',team:'brotherhood',tx:['xmen'],foe:'profx',
+ it:[['防读心头盔','能挡住心灵感应的头盔']],pw:['操控磁场和一切金属'],col:['#8e1b2b','#5b2a86','#999999'],
+ cl:['集中营幸存者','X 教授的老朋友','头盔能挡住读心','能控制所有金属'],fact:'他的头盔专门用来防御 X 教授的读心术。'},
+{id:'storm',u:'M',f:2,zh:'暴风女',en:'Storm',real:'奥罗罗·门罗 Ororo Munroe',team:'xmen',tx:['avengers'],
+ it:[],pw:['呼风唤雨，操控天气与闪电'],col:['#f0f0f0','#151515','#d4af37'],
+ cl:['一头白发','曾被当作女神崇拜','能召唤雷暴','X 战警的领导者之一'],fact:'她曾在非洲被当地人当作雨神崇拜。'},
+{id:'cyclops',u:'M',f:2,zh:'镭射眼',en:'Cyclops',real:'斯科特·萨默斯 Scott Summers',team:'xmen',
+ it:[['红宝石石英护目镜','唯一能挡住他眼部光束的镜片']],pw:['双眼不停射出强力冲击光束'],col:['#1d3f8f','#f2c12e','#c62828'],
+ cl:['总戴着红色护目镜','X 战警的场上队长','不能随便摘眼镜','恋人是琴·格雷'],fact:'他眼中的光束无法关闭，只能靠特殊镜片挡住。'},
+{id:'thanos',u:'M',f:1,v:1,zh:'灭霸',en:'Thanos',home:'泰坦星',
+ it:[['无限手套','镶嵌六颗无限宝石的金色手套']],pw:['力量惊人的泰坦人，集齐宝石后一个响指就能改变宇宙'],col:['#6a4c93','#d4af37','#3b5998'],
+ cl:['紫色皮肤','来自土星的卫星','想集齐六颗宝石','打了一个响指'],fact:'漫画里他追求的是“死亡”女神的青睐。'},
+{id:'loki',u:'M',f:1,v:1,zh:'洛基',en:'Loki',real:'洛基·劳菲森 Loki Laufeyson',foe:'thor',
+ it:[['权杖','（MCU）镶着心灵宝石的权杖']],pw:['诡计之神，擅长幻术与变形'],col:['#1b5e20','#d4af37','#151515'],
+ cl:['诡计之神','头盔上有一对长角','其实是冰霜巨人的孩子','雷神的弟弟'],fact:'他是被奥丁收养的冰霜巨人之子。'},
+{id:'groot',u:'M',f:2,zh:'格鲁特',en:'Groot',team:'guardians',
+ it:[],pw:['外星树人，身体能再生和生长，几乎只会说一句话'],col:['#6d4c2f','#3e7d3a','#a1887f'],
+ cl:['外星植物生物','几乎只会说一句话','能从一根树枝重新长出来','银河护卫队成员'],fact:'他唯一会说的那句话是“我是格鲁特”，语调不同意思也不同。'},
+{id:'starlord',u:'M',f:2,zh:'星爵',en:'Star-Lord',real:'彼得·奎尔 Peter Quill',team:'guardians',
+ it:[['随身听','（MCU）母亲留给他的随身听和老歌磁带']],pw:['星际冒险者，靠喷射靴和元素枪作战'],col:['#8b2b1a','#3a3a3a','#c62828'],
+ cl:['小时候被外星人带离地球','自称拥有一个传奇的名号','（MCU）很爱听 70、80 年代的老歌','银河护卫队的队长'],fact:'电影里他的父亲是天神族的伊戈。'},
+{id:'rocket',u:'M',f:2,zh:'火箭浣熊',en:'Rocket',team:'guardians',
+ it:[],pw:['被改造过的浣熊，机械与枪械天才'],col:['#8d6e63','#ff7043','#37474f'],
+ cl:['被实验改造过的小动物','脾气很冲','会造各种枪和炸弹','和一位树人是好搭档'],fact:'（MCU）他最讨厌别人叫他“浣熊”。'},
+{id:'vision',u:'M',f:2,zh:'幻视',en:'Vision',team:'avengers',
+ it:[['心灵宝石','（MCU）嵌在额头上的黄色宝石']],pw:['合成人，能改变自身密度、穿墙而过'],col:['#c2185b','#2e7d32','#f2c12e'],
+ cl:['红色皮肤的人造人','能穿过墙壁','额头上有一颗宝石','和绯红女巫是一对'],fact:'漫画中他由反派奥创制造。'},
+{id:'ghostrider',u:'M',f:3,zh:'恶灵骑士',en:'Ghost Rider',real:'约翰尼·布雷泽 Johnny Blaze',
+ it:[['地狱火机车','燃烧着地狱之火的摩托车'],['火焰锁链','缠绕火焰的长链']],pw:['头颅化作燃烧的骷髅，用“忏悔凝视”惩罚恶人'],col:['#ff6f00','#151515','#bdbdbd'],
+ cl:['特技摩托车手','为救人和恶魔做了交易','夜晚头会变成燃烧的骷髅','骑着冒火的摩托车'],fact:'“忏悔凝视”会让罪人感受到自己造成的所有痛苦。'},
+{id:'daredevil',u:'M',f:2,zh:'夜魔侠',en:'Daredevil',real:'马特·默多克 Matt Murdock',home:'地狱厨房（纽约）',foe:'kingpin',
+ it:[['红色短棍','可拆分、带钩索的格斗短棍']],pw:['双目失明，其余感官强到如同雷达'],col:['#8b0000','#c62828','#151515'],
+ cl:['白天是一名律师','小时候被化学品弄瞎了眼睛','靠听觉和触觉“看见”世界','守护地狱厨房'],fact:'他的外号是“无所畏惧的人”（The Man Without Fear）。'},
+{id:'moonknight',u:'M',f:3,zh:'月光骑士',en:'Moon Knight',real:'马克·斯佩克特 Marc Spector',
+ it:[],pw:['埃及月神孔苏的化身，体内有多重人格'],col:['#f5f5f5','#bdbdbd','#2b2b2b'],
+ cl:['前雇佣兵','在埃及死而复生','为一位月神服务','一身白色斗篷，有多重人格'],fact:'他穿白色，是故意让敌人看见他到来。'},
+{id:'silversurfer',u:'M',f:3,zh:'银影侠',en:'Silver Surfer',real:'诺林·拉德 Norrin Radd',home:'Zenn-La 星',
+ it:[['银色冲浪板','能以超光速穿越宇宙的冲浪板']],pw:['全身覆盖银色宇宙能量，能在太空中自由穿行'],col:['#cfd8dc','#90a4ae','#eceff1'],
+ cl:['来自 Zenn-La 星球','为拯救故乡成了“吞星”的先驱','全身银色','踩着一块板在宇宙里飞'],fact:'他是吞噬星球的巨人“吞星”的使者。'},
+{id:'venom',u:'M',f:2,v:1,zh:'毒液',en:'Venom',real:'艾迪·布洛克 Eddie Brock',foe:'spidey',
+ it:[],pw:['外星共生体附身，满口獠牙，能伸出触手'],col:['#151515','#f5f5f5','#3a3a3a'],
+ cl:['身体里寄宿着另一个生命','和一个外星生物共用身体','黑色身体、白色大眼、长舌头','这个外星生物最初附在蜘蛛侠身上'],fact:'共生体最早是在“秘密战争”中被蜘蛛侠带回地球的。'},
+{id:'goblin',u:'M',f:2,v:1,zh:'绿魔',en:'Green Goblin',real:'诺曼·奥斯本 Norman Osborn',foe:'spidey',
+ it:[['南瓜炸弹','南瓜形状的手榴弹'],['蝙蝠滑翔翼','能载人高速飞行的滑翔器']],pw:['喝下实验药剂，力量增强但精神失常'],col:['#2e7d32','#6a1b9a','#8bc34a'],
+ cl:['儿子是蜘蛛侠的好朋友','经营一家大公司','站在滑翔翼上飞','扔南瓜炸弹'],fact:'漫画中他造成了蜘蛛侠女友格温·斯黛西的死亡。'},
+{id:'redskull',u:'M',f:2,v:1,zh:'红骷髅',en:'Red Skull',real:'约翰·施密特 Johann Schmidt',team:'hydra',foe:'cap',
+ it:[['宇宙魔方','（MCU）蕴含空间宝石的立方体']],pw:['九头蛇首领，脸像一颗红色骷髅'],col:['#c62828','#2b2b2b','#5d4037'],
+ cl:['二战时期的反派','领导一个以多头怪物命名的组织','（MCU）也注射过不完美的血清','美国队长的头号敌人'],fact:'电影里他后来在沃弥尔星成了灵魂宝石的守护者。'},
+{id:'mrfantastic',u:'M',f:3,zh:'神奇先生',en:'Mr. Fantastic',real:'里德·理查兹 Reed Richards',team:'ff',tx:['avengers'],home:'巴克斯特大厦（纽约）',foe:'doom',
+ it:[],pw:['身体能像橡皮一样随意拉伸'],col:['#1e4fa3','#f5f5f5','#151515'],
+ cl:['带着家人和好友乘火箭飞入太空','遭到宇宙射线照射','身体能拉得很长','四人团队的领袖'],fact:'神奇四侠（1961）被视为漫威“白银时代”的开端。'},
+{id:'torch',u:'M',f:3,zh:'霹雳火',en:'Human Torch',real:'约翰尼·斯托姆 Johnny Storm',team:'ff',tx:['avengers'],
+ it:[],pw:['全身燃起火焰并能飞行'],col:['#ff6f00','#ffca28','#1e4fa3'],
+ cl:['姐姐是隐形女','遭到宇宙射线照射','喊一声就全身着火','四人团队里会飞的那个'],fact:'他的口头禅是“Flame on!”（燃烧吧！）。'},
+{id:'thing',u:'M',f:3,zh:'石头人',en:'The Thing',real:'本·格林 Ben Grimm',team:'ff',tx:['avengers'],
+ it:[],pw:['全身变成橙色岩石，力大无穷'],col:['#e07b39','#1e4fa3','#8d5524'],
+ cl:['前飞行员','宇宙射线让他再也变不回人形','全身橙色岩石','口头禅是“该开打了！”'],fact:'他是神奇四侠中唯一不能随意变回人形的成员。'},
+{id:'doom',u:'M',f:2,v:1,zh:'毁灭博士',en:'Doctor Doom',real:'维克多·冯·杜姆 Victor von Doom',home:'拉托维尼亚',foe:'mrfantastic',
+ it:[['铁面具','遮住伤疤面孔的金属面具']],pw:['科学天才兼魔法师，统治着一个国家'],col:['#2e7d32','#9e9e9e','#424242'],
+ cl:['东欧小国的君主','科学与魔法都精通','永远戴着金属面具','神奇先生的大学同学和死敌'],fact:'他说话时常用第三人称称呼自己“杜姆”。'},
+{id:'kingpin',u:'M',f:3,v:1,zh:'金并',en:'Kingpin',real:'威尔森·菲斯克 Wilson Fisk',foe:'daredevil',
+ it:[],pw:['纽约地下犯罪之王，体型庞大却几乎全是肌肉'],col:['#f5f5f5','#4a148c','#151515'],
+ cl:['犯罪集团老大','总穿白色西装','身材魁梧','夜魔侠和蜘蛛侠的敌人'],fact:'他看起来胖，设定上几乎全是肌肉。'},
+{id:'shangchi',u:'M',f:3,zh:'尚气',en:'Shang-Chi',
+ it:[],pw:['功夫大师，徒手格斗几乎无人能敌'],col:['#c62828','#d4af37','#151515'],
+ cl:['从小接受严格的武术训练','父亲是神秘组织的首领','（MCU）曾在旧金山做泊车员','（MCU）父亲掌握十枚神秘指环'],fact:'2021 年的电影让他成为 MCU 首位亚裔主角英雄。'},
+// ---------------- DC
+{id:'superman',u:'D',f:1,zh:'超人',en:'Superman',real:'克拉克·肯特 Clark Kent',team:'jl',home:'大都会',foe:'lex',
+ it:[['氪石','来自故乡的绿色矿石，是他最大的弱点']],pw:['飞行、钢铁之躯，双眼还能射出热视线'],col:['#1e4fa3','#c8102e','#f2c12e'],
+ cl:['婴儿时乘飞船来到地球','在堪萨斯农场长大','白天是报社记者','怕一种绿色石头'],fact:'1938 年《动作漫画》第 1 期首次登场，被视为超级英雄题材的起点。'},
+{id:'batman',u:'D',f:1,zh:'蝙蝠侠',en:'Batman',real:'布鲁斯·韦恩 Bruce Wayne',team:'jl',home:'哥谭市',foe:'joker',
+ it:[['蝙蝠镖','蝙蝠形状的投掷武器'],['多功能腰带','装满各种工具的黄色腰带']],pw:['没有超能力，靠头脑、财富与格斗，号称“世界上最伟大的侦探”'],col:['#2b2b2b','#6b6b6b','#f2c12e'],
+ cl:['亿万富翁','小时候亲眼看到父母遇害','夜里在城市中打击犯罪','警察局长会往天上打一盏灯召唤他'],fact:'他首次登场于 1939 年《侦探漫画》第 27 期。'},
+{id:'ww',u:'D',f:1,zh:'神奇女侠',en:'Wonder Woman',real:'戴安娜·普林斯 Diana Prince',team:'jl',home:'天堂岛',foe:'cheetah',
+ it:[['真言套索','被它套住的人只能说真话'],['不灭护腕','能挡住子弹的金属护腕']],pw:['亚马逊战士，拥有众神赐予的力量'],col:['#c8102e','#1e4fa3','#d4af37'],
+ cl:['在只有女性的岛上长大','亚马逊人的公主','能用护腕挡子弹','武器是一根套索'],fact:'她的创作者威廉·马斯顿也研究过早期的测谎技术。'},
+{id:'flash',u:'D',f:1,zh:'闪电侠',en:'The Flash',real:'巴里·艾伦 Barry Allen',team:'jl',home:'中城',foe:'reverseflash',
+ it:[],pw:['连接“神速力”，跑得比光还快，甚至能穿越时间'],col:['#c8102e','#f2c12e','#8b0000'],
+ cl:['警局的法医','实验室遭雷击后被化学品浇了一身','衣服上有一道闪电标志','速度来自神速力'],fact:'2011 年的《闪点》事件就是他回到过去引发的。'},
+{id:'aquaman',u:'D',f:1,zh:'海王',en:'Aquaman',real:'亚瑟·库瑞 Arthur Curry',team:'jl',home:'亚特兰蒂斯',foe:'黑蝠鲼',
+ it:[['三叉戟','海神的武器，象征亚特兰蒂斯王权']],pw:['能在水下呼吸，用意念与海洋生物沟通'],col:['#ff8f00','#2e7d32','#d4af37'],
+ cl:['父亲是灯塔看守人','母亲是海底女王','能和鱼说话','手持三叉戟'],fact:'他的死敌黑蝠鲼戴着一个像巨大鱼头的头盔。'},
+{id:'gl',u:'D',f:1,zh:'绿灯侠',en:'Green Lantern',real:'哈尔·乔丹 Hal Jordan',team:'glc',tx:['jl'],home:'欧阿星',foe:'辛尼斯托',
+ it:[['能量戒指','把意志力变成各种绿色光造物的戒指']],pw:['用意志力创造光之造物'],col:['#2e7d32','#151515','#8bc34a'],
+ cl:['试飞员','一个垂死的外星人把一件东西交给了他','需要定期给戒指充能','宇宙警察部队的一员'],fact:'早期设定里，他的戒指对黄色无效。'},
+{id:'cyborg',u:'D',f:2,zh:'钢骨',en:'Cyborg',real:'维克多·斯通 Victor Stone',
+ it:[['母盒','来自新创世星的“活”电脑']],pw:['半人半机械，能接入任何网络'],col:['#9e9e9e','#c62828','#424242'],
+ cl:['曾是运动员','一场事故后被父亲改造','身体一半是机器','能接入任何网络'],fact:'2011 年 DC 重启后，他成为正义联盟的创始成员。'},
+{id:'greenarrow',u:'D',f:2,zh:'绿箭侠',en:'Green Arrow',real:'奥利弗·奎恩 Oliver Queen',home:'星城',
+ it:[['拳击手套箭','箭头是一只拳击手套的特制箭']],pw:['神射手，靠各种特制箭作战'],col:['#2e7d32','#1b5e20','#d4af37'],
+ cl:['富家公子','曾流落荒岛多年','留着山羊胡','绿色兜帽、背着箭袋'],fact:'他的形象最早有一部分借鉴了侠盗罗宾汉。'},
+{id:'shazam',u:'D',f:2,zh:'沙赞',en:'Shazam',real:'比利·巴特森 Billy Batson',foe:'blackadam',
+ it:[],pw:['喊出一个词，就从小孩变成成年英雄'],col:['#c8102e','#f2c12e','#f5f5f5'],
+ cl:['一个普通男孩，一次地铁奇遇改变了他','从古老巫师那里得到力量','名字由六位神话人物的首字母组成','一喊名字就会被闪电劈中变身'],fact:'这个名字取自所罗门、赫拉克勒斯、阿特拉斯、宙斯、阿喀琉斯、墨丘利的首字母。'},
+{id:'martian',u:'D',f:3,zh:'火星猎人',en:'Martian Manhunter',real:'琼恩·琼斯 J’onn J’onzz',team:'jl',home:'火星',
+ it:[],pw:['变形、隐身、心灵感应样样精通，却害怕火'],col:['#2e7d32','#1e4fa3','#c62828'],
+ cl:['来自一颗红色星球','能变成任何人的样子','会读心，也能穿墙','最怕的是火'],fact:'他是正义联盟的创始成员之一。'},
+{id:'supergirl',u:'D',f:2,zh:'女超人',en:'Supergirl',real:'卡拉·佐-艾尔 Kara Zor-El',
+ it:[],pw:['和表哥一样能飞，拥有超级力量与热视线'],col:['#1e4fa3','#c8102e','#f2c12e'],
+ cl:['从毁灭的母星逃了出来','比表哥晚到地球很多年','超人的表妹','披着红披风的金发女孩'],fact:'按设定她其实比超人年长，只是在太空中漂流了许多年。'},
+{id:'robin',u:'D',f:2,zh:'罗宾',en:'Robin',real:'迪克·格雷森 Dick Grayson',team:'titans',tx:['jl'],
+ it:[['伸缩长棍','可以伸缩的格斗长棍']],pw:['马戏团空中飞人出身，身手矫健'],col:['#c8102e','#2e7d32','#f2c12e'],
+ cl:['马戏团杂技世家','父母在表演中遇害','被一位亿万富翁收养','蝙蝠侠的少年搭档'],fact:'“罗宾”这个身份前后被好几个人继承过，迪克·格雷森是第一位。'},
+{id:'batgirl',u:'D',f:3,zh:'蝙蝠女',en:'Batgirl',real:'芭芭拉·戈登 Barbara Gordon',
+ it:[],pw:['电脑天才与格斗高手，后来成为情报中枢“神谕”'],col:['#5b2a86','#f2c12e','#2b2b2b'],
+ cl:['父亲是警察局长','经典设定里是图书馆员','曾以“神谕”身份为英雄们提供情报','披着蝙蝠披风的红发女孩'],fact:'她受重伤后以“神谕”身份活跃了许多年。'},
+{id:'joker',u:'D',f:1,v:1,zh:'小丑',en:'Joker',home:'哥谭市',foe:'batman',
+ it:[['扑克牌','他的标志，常留在犯罪现场'],['喷水胸花','会喷出酸液的整人道具']],pw:['没有超能力，疯狂又狡猾的犯罪天才'],col:['#6a1b9a','#2e7d32','#f5f5f5'],
+ cl:['真实身份成谜','一种说法是他跌进了化学池','绿头发、白皮肤、咧嘴笑','蝙蝠侠的头号死敌'],fact:'他的真实身份至今在漫画中都没有确定答案。'},
+{id:'harley',u:'D',f:1,v:1,zh:'小丑女',en:'Harley Quinn',real:'哈莉·奎茵泽尔 Harleen Quinzel',team:'squad',
+ it:[['大木槌','比她人还大的整人木槌'],['棒球棍','电影里的标志性武器']],pw:['体操运动员般的身手，疯狂又难以预测'],col:['#c8102e','#151515','#f5f5f5'],
+ cl:['曾是精神科医生','在阿卡姆疯人院工作','爱上了自己的病人','双马尾，一半红一半蓝'],fact:'她最早是 1992 年《蝙蝠侠动画系列》的原创角色，后来才进入漫画。'},
+{id:'lex',u:'D',f:2,v:1,zh:'莱克斯·卢瑟',en:'Lex Luthor',foe:'superman',
+ it:[['战甲','能与超人正面对抗的动力装甲']],pw:['没有超能力，世界级天才与企业家'],col:['#5b2a86','#2e7d32','#9e9e9e'],
+ cl:['经营一家巨型科技企业','光头','漫画里曾当选美国总统','超人的头号死敌'],fact:'漫画中他确实当选过美国总统。'},
+{id:'darkseid',u:'D',f:2,v:1,zh:'达克赛德',en:'Darkseid',real:'乌克萨斯 Uxas',home:'天启星',
+ it:[['反生命方程式','能控制一切智慧生物意志的公式']],pw:['新神中的暴君，双眼射出会追踪目标的欧米伽射线'],col:['#5d4037','#1e4fa3','#424242'],
+ cl:['来自一颗地狱般的星球','新神之一','一心寻找控制万物的方程式','眼睛射出会拐弯的射线'],fact:'他 1970 年登场，比灭霸早了三年。'},
+{id:'catwoman',u:'D',f:2,v:1,zh:'猫女',en:'Catwoman',real:'赛琳娜·凯尔 Selina Kyle',
+ it:[['长鞭','她最常用的武器']],pw:['身手像猫一样敏捷的神偷'],col:['#151515','#424242','#6a1b9a'],
+ cl:['专偷珠宝的大盗','身手像猫一样灵巧','和蝙蝠侠亦敌亦友','手持长鞭'],fact:'她首次登场（1940）时的代号其实是“猫”。'},
+{id:'deathstroke',u:'D',f:2,v:1,zh:'丧钟',en:'Deathstroke',real:'斯莱德·威尔逊 Slade Wilson',foe:'少年泰坦',
+ it:[['双色面具','一半橙一半黑的面具']],pw:['军方强化实验让他大脑运转飞快，是世界顶尖雇佣兵'],col:['#ff8f00','#151515','#1e4fa3'],
+ cl:['顶尖雇佣兵','参加过军方的强化实验','只有一只眼睛','面具一半橙一半黑'],fact:'他是少年泰坦最著名的敌人。'},
+{id:'atom',u:'D',f:3,zh:'原子侠',en:'The Atom',real:'雷·帕尔默 Ray Palmer',team:'jl',
+ it:[['白矮星物质','让他能够缩小的神奇物质']],pw:['能缩小到原子大小，还能控制自己的重量'],col:['#c8102e','#1e4fa3','#151515'],
+ cl:['大学物理教授','用一颗星星的碎片做成装置','能缩小到肉眼看不见','名字和构成物质的微粒有关'],fact:'他和漫威的蚁人一样，都是“缩小系”英雄。'},
+{id:'bluebeetle',u:'D',f:3,zh:'蓝甲虫',en:'Blue Beetle',real:'海梅·雷耶斯 Jaime Reyes',home:'埃尔帕索',
+ it:[['圣甲虫','和他脊椎融合的外星科技装置']],pw:['外星甲虫装甲，能变出武器和翅膀'],col:['#1e4fa3','#151515','#2a6db0'],
+ cl:['墨西哥裔少年','捡到了一只古老的甲虫','甲虫会和他说话','变身后全身蓝色装甲'],fact:'2023 年的电影《蓝甲虫》以他为主角。'},
+{id:'constantine',u:'D',f:3,zh:'康斯坦丁',en:'Constantine',home:'利物浦（英国）',
+ it:[],pw:['驱魔人与神秘学侦探，靠咒语和诡计对付恶魔'],col:['#a1887f','#f5f5f5','#c62828'],
+ cl:['英国人','总穿一件米色风衣','和天堂地狱都打过交道','靠驱魔为生'],fact:'他的形象最初参考了歌手斯汀。'},
+{id:'raven',u:'D',f:3,zh:'渡鸦',en:'Raven',real:'瑞秋·罗斯 Rachel Roth',team:'titans',
+ it:[],pw:['恶魔之女，以灵魂形态和黑暗魔法作战'],col:['#4a148c','#1e1e3f','#7e57c2'],
+ cl:['来自另一个维度','父亲是一个恶魔','必须压抑自己的情绪','少年泰坦里的魔法师'],fact:'她的父亲是恶魔崔岗（Trigon）。'},
+{id:'starfire',u:'D',f:3,zh:'星火',en:'Starfire',real:'考丽安德 Koriand’r',team:'titans',home:'塔玛兰星',
+ it:[],pw:['外星公主，吸收太阳能量并从手中射出星光弹'],col:['#ff8f00','#5b2a86','#8bc34a'],
+ cl:['一位逃离奴役的外星公主','皮肤是金橙色的','能靠身体接触学会一门语言','少年泰坦中会飞的公主'],fact:'她能通过身体接触迅速学会一种语言。'},
+{id:'blackadam',u:'D',f:2,v:1,zh:'黑亚当',en:'Black Adam',real:'提斯-亚当 Teth-Adam',home:'坎达克',foe:'shazam',
+ it:[],pw:['与沙赞同源的魔法力量，凶狠强大'],col:['#151515','#d4af37','#5d4037'],
+ cl:['古埃及的勇士','曾被巫师选中，后来堕落','统治着虚构国家坎达克','沙赞的死对头'],fact:'2022 年的电影《黑亚当》由道恩·强森主演。'},
+{id:'doomsday',u:'D',f:2,v:1,zh:'毁灭日',en:'Doomsday',foe:'superman',
+ it:[],pw:['每次被杀死后复活，都会变得更强'],col:['#9e9e9e','#5d4037','#e0e0e0'],
+ cl:['史前的生物实验品','全身长满骨刺','每次死去都会进化','1992 年杀死了超人'],fact:'在《超人之死》（1992）里，他和超人同归于尽。'},
+{id:'bane',u:'D',f:2,v:1,zh:'贝恩',en:'Bane',foe:'batman',
+ it:[['“毒液”药剂','通过管子注入身体的强化药物']],pw:['注射药剂后力量暴增的战术天才'],col:['#424242','#5d4037','#2e7d32'],
+ cl:['在监狱里长大','注射一种名为“毒液”的药物','戴着面罩','曾折断蝙蝠侠的脊椎'],fact:'在《骑士陨落》里，他折断了蝙蝠侠的背。'},
+{id:'ivy',u:'D',f:2,v:1,zh:'毒藤女',en:'Poison Ivy',real:'帕米拉·艾斯利 Pamela Isley',
+ it:[],pw:['操控植物，唇间带着剧毒'],col:['#2e7d32','#c62828','#8bc34a'],
+ cl:['植物学家','对保护植物近乎偏执','一个吻就能致命','能让植物听她指挥'],fact:'她和小丑女是漫画中的著名搭档。'},
+{id:'penguin',u:'D',f:2,v:1,zh:'企鹅人',en:'Penguin',real:'奥斯瓦尔德·科波特 Oswald Cobblepot',
+ it:[['机关雨伞','藏着枪、刀或喷射器的雨伞']],pw:['没有超能力的黑帮老大'],col:['#151515','#f5f5f5','#5b2a86'],
+ cl:['出身没落的名门','身材矮胖，走路摇摇摆摆','戴单片眼镜和高礼帽','雨伞是他的武器'],fact:'在《新蝙蝠侠》（2022）中由科林·法瑞尔扮演。'},
+{id:'riddler',u:'D',f:2,v:1,zh:'谜语人',en:'Riddler',real:'爱德华·尼格玛 Edward Nygma',
+ it:[['问号手杖','顶端是问号形状的手杖']],pw:['痴迷谜题的天才罪犯'],col:['#2e7d32','#5b2a86','#151515'],
+ cl:['作案前总忍不住给对手留下谜题','自负的天才','衣服上满是问号','蝙蝠侠的敌人之一'],fact:'他的姓 Nygma 和 E. Nygma 连读，谐音 enigma（谜）。'},
+{id:'zatanna',u:'D',f:3,zh:'扎塔娜',en:'Zatanna',team:'jl',
+ it:[],pw:['把咒语倒着念出来就能施法'],col:['#151515','#f5f5f5','#5b2a86'],
+ cl:['舞台魔术师','父亲也是一位魔法师','戴高礼帽、穿燕尾服','咒语要倒着念'],fact:'她的父亲扎塔拉同样是 DC 的魔法师。'},
+{id:'canary',u:'D',f:3,zh:'黑金丝雀',en:'Black Canary',real:'黛娜·兰斯 Dinah Lance',
+ it:[],pw:['一声“金丝雀之啸”能震碎钢铁'],col:['#151515','#f2c12e','#424242'],
+ cl:['金发、黑色皮夹克的武术高手','和绿箭侠是恋人','一声尖啸能震碎玻璃','“猛禽小队”的核心成员'],fact:'她是“猛禽小队”的核心成员。'},
+{id:'cheetah',u:'D',f:3,v:1,zh:'豹女',en:'Cheetah',real:'芭芭拉·米内尔瓦 Barbara Minerva',foe:'ww',
+ it:[],pw:['拥有猎豹般的速度与利爪'],col:['#e0a030','#5d4037','#151515'],
+ cl:['考古学家','被一位古老的神赐予力量','全身豹纹','神奇女侠的宿敌'],fact:'电影《神奇女侠 1984》中由克里斯汀·韦格扮演。'},
+{id:'reverseflash',u:'D',f:3,v:1,zh:'逆闪电',en:'Reverse-Flash',real:'伊欧巴德·索恩 Eobard Thawne',foe:'flash',
+ it:[],pw:['来自未来的速度者，操控负神速力'],col:['#f2c12e','#c8102e','#151515'],
+ cl:['来自 25 世纪','原本是闪电侠的狂热粉丝','战衣是闪电侠的反色','杀害了闪电侠的母亲'],fact:'他回到过去杀害了巴里·艾伦的母亲。'},
+];
+const BYID = Object.fromEntries(ENT.map(e => [e.id, e]));
+// Pairs that must never appear together as answer + distractor outside a duel,
+// because a clue for one could fairly describe the other.
+const SIMILAR = [['wolverine','deadpool'],['deadpool','deathstroke'],['moonknight','deadpool'],['moonknight','deathstroke'],['storm','thor'],['storm','quicksilver'],['thor','loki'],['loki','vision'],['ghostrider','torch'],['superman','supergirl'],['shazam','blackadam'],['captainmarvel','shazam'],['captainmarvel','gl'],['captainmarvel','thing'],['gl','thing'],['captainmarvel','starfire'],['bane','venom'],['spidey','venom'],['spidey','bluebeetle'],['flash','reverseflash'],['flash','quicksilver'],['quicksilver','reverseflash'],['antman','atom'],['hulk','atom'],['hawkeye','greenarrow'],['hawkeye','robin'],['namor','aquaman'],['panther','namor'],['thanos','darkseid'],['ironman','batman'],['ironman','lex'],['ironman','greenarrow'],['batman','greenarrow'],['batman','lex'],['profx','martian'],['strange','constantine'],['kingpin','penguin']];
+const SIM = new Set(SIMILAR.flatMap(([a,b]) => [a+'|'+b, b+'|'+a]));
+const similar = (a, b) => SIM.has(a+'|'+b);
+// Extra enemies, so "whose arch-enemy is X" never has a second fair answer.
+const ALSO_FOE = { magneto:['wolverine','storm','cyclops'], kingpin:['spidey'], joker:['robin','batgirl','harley'], lex:['supergirl'], doomsday:['supergirl'] };
+const DUELS = [
+ {a:'deadpool',b:'deathstroke',ca:['为治疗癌症参加实验，从此满身疤痕','经常打破第四面墙和读者聊天','红黑配色的紧身衣，背着两把武士刀','真名韦德·威尔逊'],cb:['只剩一只眼睛','面具一半橙一半黑','少年泰坦最著名的敌人','真名斯莱德·威尔逊']},
+ {a:'quicksilver',b:'flash',ca:['银白色头发','双胞胎妹妹会红色魔法','真名皮特罗·马克西莫夫','速度来自自身体质，而不是某种能量场'],cb:['实验室遭雷击后获得速度','速度来自“神速力”','能跑得快到穿越时间','红色战衣，胸口一道闪电']},
+ {a:'antman',b:'atom',ca:['靠“皮姆粒子”改变大小','能指挥成群的蚂蚁','前科犯，出狱后想当个好爸爸','从初代汉克·皮姆手里接过战衣'],cb:['靠白矮星物质缩小','大学物理教授雷·帕尔默','能缩到原子大小','正义联盟成员']},
+ {a:'hawkeye',b:'greenarrow',ca:['紫色系装束','复仇者联盟的弓箭手','真名克林特·巴顿','首次登场时其实是反派'],cb:['绿色兜帽，留着山羊胡','曾流落荒岛多年','守护星城','有一支“拳击手套箭”']},
+ {a:'namor',b:'aquaman',ca:['脚踝上长着小翅膀','1939 年就已登场','常被称作漫威的第一位变种人','几乎只穿一条绿色泳裤'],cb:['父亲是灯塔看守人','手持三叉戟','橙色鳞甲配绿色裤子','死对头是黑蝠鲼']},
+ {a:'captainmarvel',b:'shazam',ca:['美国空军飞行员卡罗尔·丹弗斯','获得了克里人的力量','能吸收能量并发射光子冲击','胸前有一颗金色星星'],cb:['一喊名字就被闪电劈中变身','本体是一个小男孩','力量来自六位神话人物','早年也叫 Captain Marvel，后来改了名']},
+ {a:'thanos',b:'darkseid',ca:['紫色皮肤的泰坦人','想集齐六颗宝石','一个响指让宇宙一半生命消失','漫画里深爱着“死亡”'],cb:['统治地狱般的天启星','寻找“反生命方程式”','双眼射出欧米伽射线','新神中的暴君']},
+ {a:'ironman',b:'batman',ca:['靠一身高科技装甲战斗','胸口装着方舟反应堆','曾当众宣布自己的英雄身份','在山洞里造出第一套战衣'],cb:['父母在小巷中遇害','只在夜里出没','坚持不用枪','警察局长用探照灯召唤他']},
+];
+const UNI = { M:'漫威', D:'DC' };
+
+// ------------------------------------------------------------------ art: original flat SVG portraits and item icons
+// Hand-built from simple parts (head, hair, mask, headgear, suit, emblem) so the
+// game ships with no image files. Fan-style caricatures, not official artwork.
+const INK = '#1a1530';
+const S1 = '#f2c9a5', S2 = '#d9a77e', S3 = '#8d5a3b';
+const BODY = 'M6 124 C8 100 28 89 60 89 C92 89 112 100 114 124 Z';
+const BODY_BIG = 'M-4 124 C-2 94 24 84 60 84 C96 84 122 94 124 124 Z';
+// sh = silhouette is distinctive enough for the shadow round
+const LOOK = {
+  ironman:{suit:'#b3122b', acc:[['shoulders','#f2b632']], em:['reactor'], head:'full', mask:'#b3122b', x:[['faceplate','#f2b632']], eyes:['slit'], mouth:'none'},
+  cap:{suit:'#1f3a93', acc:[['band','#c8102e']], em:['star','#f5f5f5'], skin:S1, cover:['helmet','#1f3a93'], x:[['capwings','#f5f5f5'],['letter','A','#f5f5f5']], eyes:['dot'], mouth:'line', sh:1},
+  thor:{cape:'#c62828', suit:'#4a5568', acc:[['discs','#c0c7d1']], skin:S1, back:['long','#e8c25a'], hair:['side','#e8c25a'], beard:['full','#c9a040'], eyes:['dot'], mouth:'line', sh:1},
+  hulk:{big:1, suit:'#6a3d9a', acc:[['torn','#3f8f3a']], skin:'#5aa046', hair:['messy','#151515'], eyes:['angry'], mouth:'teeth', sh:1},
+  spidey:{suit:'#d32f2f', acc:[['sides','#1e4fa3']], em:['spider','#151515'], head:'full', mask:'#d32f2f', x:[['web']], eyes:['big'], mouth:'none'},
+  widow:{suit:'#1c1c1c', acc:[['belt','#8a8a8a']], em:['hourglass','#c62828'], skin:S1, back:['shoulder','#c0392b'], hair:['side','#c0392b'], eyes:['dot'], mouth:'smirk'},
+  hawkeye:{suit:'#5b2a86', acc:[['vneck','#2b2b2b'],['quiver','#6d4c2f']], skin:S1, hair:['short','#c8a25a'], cover:['domino','#5b2a86'], eyes:['white'], mouth:'line', sh:1},
+  panther:{suit:'#1a1a1a', acc:[['necklace','#c0c0c0']], head:'full', mask:'#1a1a1a', x:[['catears','#1a1a1a'],['plines','#8e6bd8']], eyes:['lens'], mouth:'none', sh:1},
+  strange:{cape:'#b71c1c', suit:'#1f3c88', acc:[['collarUp','#b71c1c'],['sash','#e0b84b']], em:['amulet'], skin:S1, hair:['temples','#2b2118'], beard:['goatee','#2b2118'], eyes:['dot'], mouth:'line', sh:1},
+  wolverine:{suit:'#f2c12e', acc:[['sides','#1d3f8f']], em:['xcircle'], skin:S1, cover:['cowl','#f2c12e'], x:[['fins','#1a1a1a']], eyes:['lens'], mouth:'frown', beard:['sideburns','#2b2118'], sh:1},
+  deadpool:{suit:'#b71c1c', acc:[['sides','#151515'],['katanas','#9e9e9e']], em:['circle','#151515'], head:'full', mask:'#b71c1c', x:[['eyepatches','#151515']], eyes:['lens'], mouth:'none', sh:1},
+  captainmarvel:{suit:'#c62828', acc:[['sides','#1a3c8f']], em:['star','#f2c12e'], skin:S1, hair:['mohawk','#e8c25a'], eyes:['dot'], mouth:'smile', sh:1},
+  scarlet:{suit:'#8a0f22', acc:[['coat','#b0102a']], skin:S1, back:['long','#7a2a1a'], hair:['side','#7a2a1a'], x:[['wandacrown','#c2185b']], eyes:['dot'], mouth:'line', sh:1},
+  antman:{suit:'#b71c1c', acc:[['sides','#222222']], em:['circle','#c0c0c0'], head:'full', mask:'#9aa1aa', x:[['antennae','#9aa1aa'],['antstripe','#b71c1c']], eyes:['glow','#ff5a5a'], mouth:'none', sh:1},
+  quicksilver:{suit:'#2b5fb3', em:['bolt','#f5f5f5'], skin:S1, hair:['swept','#d9dde3'], eyes:['dot'], mouth:'smirk', sh:1},
+  namor:{suit:S1, acc:[['pecs','#c99d78']], skin:S1, hair:['peak','#151515'], x:[['pointyears',S1]], eyes:['angry'], mouth:'frown', sh:1},
+  profx:{suit:'#2b3a67', acc:[['coat','#1b2747'],['tie','#f2c12e']], skin:S1, hair:['bald'], eyes:['dot'], mouth:'smile'},
+  magneto:{cape:'#5b2a86', suit:'#8e1b2b', acc:[['collarUp','#5b2a86']], skin:S1, cover:['helmet','#8e1b2b'], x:[['ridge','#8e1b2b']], eyes:['dot'], mouth:'frown', sh:1},
+  storm:{cape:'#151515', suit:'#151515', acc:[['collar','#d4af37']], skin:S3, back:['long','#f0f0f0'], hair:['side','#f0f0f0'], x:[['circlet','#d4af37']], eyes:['white'], mouth:'line', sh:1},
+  cyclops:{suit:'#1d3f8f', acc:[['harness','#f2c12e']], em:['xcircle'], skin:S1, cover:['cowl','#1d3f8f'], x:[['visor','#d32f2f']], eyes:['none'], mouth:'line'},
+  thanos:{big:1, suit:'#3b5998', acc:[['armor','#d4af37']], skin:'#7a5aa6', hair:['bald'], x:[['chinlines']], eyes:['dot'], mouth:'frown'},
+  loki:{cape:'#1b5e20', suit:'#151515', acc:[['armor','#d4af37']], skin:S1, back:['shoulder','#151515'], cover:['helmet','#d4af37'], x:[['horns','#d4af37']], eyes:['dot'], mouth:'smirk', sh:1},
+  groot:{suit:'#6d4c2f', acc:[['barkbody','#5a3d24']], skin:'#8b6a45', x:[['bark'],['twigs','#5b8f3a']], eyes:['dark'], mouth:'smile', sh:1},
+  starlord:{suit:'#8b2b1a', acc:[['coat','#5a2318']], head:'full', mask:'#4a4f57', x:[['slmask','#8a9099']], eyes:['glow','#ff3b3b'], mouth:'none', sh:1},
+  rocket:{suit:'#ff7043', acc:[['collar','#37474f']], head:'raccoon', skin:'#8d6e63', eyes:['dot'], mouth:'smirk', sh:1},
+  vision:{cape:'#f2c12e', suit:'#2e7d32', acc:[['collarUp','#f2c12e']], skin:'#c2185b', hair:['bald'], x:[['vlines','#8e0f45'],['gem','#f2c12e']], eyes:['dot'], mouth:'line'},
+  ghostrider:{suit:'#151515', acc:[['jacket','#2b2b2b'],['chain','#9e9e9e']], head:'skull', skull:'#f0ead8', x:[['flames']], eyes:['socket'], mouth:'teeth', sh:1},
+  daredevil:{suit:'#8b0000', em:['dd','#c62828'], skin:S1, cover:['cowl','#8b0000'], x:[['ddhorns','#8b0000']], eyes:['tint','#c62828'], mouth:'line', sh:1},
+  moonknight:{cape:'#f5f5f5', suit:'#e8e8e8', em:['crescent','#9e9e9e'], head:'full', mask:'#f5f5f5', cover:['hood','#f5f5f5'], eyes:['lens'], mouth:'none', sh:1},
+  silversurfer:{suit:'#cfd8dc', acc:[['shine','#ffffff']], skin:'#cfd8dc', hair:['bald'], x:[['headshine']], eyes:['white'], mouth:'line'},
+  venom:{big:1, suit:'#151515', em:['bigspider','#f5f5f5'], head:'full', mask:'#151515', eyes:['jag'], mouth:'venom', sh:1},
+  goblin:{suit:'#2e7d32', acc:[['vest','#6a1b9a']], skin:'#7cb342', x:[['goblinhat','#6a1b9a'],['pointyears','#7cb342']], eyes:['color','#ffd23f'], mouth:'sharp', sh:1},
+  redskull:{suit:'#2b2b2b', acc:[['collar','#5d4037']], head:'skull', skull:'#c62828', eyes:['socket'], mouth:'teeth'},
+  mrfantastic:{suit:'#1e4fa3', acc:[['collar','#151515']], em:['four'], skin:S1, hair:['temples','#4a3424'], eyes:['dot'], mouth:'smile'},
+  torch:{suit:'#ff6f00', em:['four'], head:'full', mask:'#ffca28', x:[['flames']], eyes:['white'], mouth:'none', sh:1},
+  thing:{big:1, suit:'#e07b39', acc:[['rockbody','#b55a24']], skin:'#e07b39', hair:['bald'], x:[['rocks'],['brow','#c76a2c']], eyes:['color','#3d7bff'], mouth:'frown', sh:1},
+  doom:{cape:'#2e7d32', suit:'#9e9e9e', acc:[['armor','#757575']], head:'full', mask:'#9e9e9e', cover:['hood','#2e7d32'], x:[['rivets']], eyes:['socket'], mouth:'slot', sh:1},
+  kingpin:{big:1, suit:'#f5f5f5', acc:[['coat','#e0e0e0'],['tie','#4a148c']], skin:S1, hair:['bald'], eyes:['dot'], mouth:'frown'},
+  shangchi:{suit:'#c62828', acc:[['mandarin','#d4af37']], skin:S2, hair:['short','#151515'], eyes:['dot'], mouth:'line'},
+  superman:{cape:'#c8102e', suit:'#1e4fa3', em:['diamond','#c8102e','#f2c12e'], skin:S1, hair:['curl','#151515'], eyes:['color','#1e4fa3'], mouth:'smile'},
+  batman:{cape:'#2b2b2b', suit:'#6b6b6b', em:['batoval','#f2c12e'], skin:S1, cover:['cowl','#2b2b2b'], x:[['batears','#2b2b2b']], eyes:['white'], mouth:'frown', sh:1},
+  ww:{suit:'#c8102e', acc:[['bustier','#d4af37']], skin:S1, back:['long','#151515'], hair:['side','#151515'], x:[['tiara','#d4af37']], eyes:['dot'], mouth:'smile', sh:1},
+  flash:{suit:'#c8102e', em:['boltc','#f2c12e'], skin:S1, cover:['cowl','#c8102e'], x:[['flashwings','#f2c12e']], eyes:['white'], mouth:'smile', sh:1},
+  aquaman:{suit:'#ff8f00', acc:[['scales','#d97200']], skin:S2, back:['shoulder','#a8783a'], hair:['side','#a8783a'], beard:['full','#8a5f2c'], eyes:['dot'], mouth:'line', sh:1},
+  gl:{suit:'#2e7d32', acc:[['sides','#151515']], em:['lantern','#8bc34a'], skin:S1, hair:['short','#4a3424'], cover:['domino','#2e7d32'], eyes:['white'], mouth:'smile'},
+  cyborg:{suit:'#9e9e9e', acc:[['plates','#c62828']], skin:S3, hair:['bald'], x:[['cybhalf','#9e9e9e']], eyes:['cyb'], mouth:'line'},
+  greenarrow:{suit:'#2e7d32', acc:[['strap','#6d4c2f']], skin:S1, cover:['hood','#1b5e20'], x:[['domino2','#1b5e20']], beard:['goatee','#d4b04a'], eyes:['white'], mouth:'line', sh:1},
+  shazam:{cape:'#f5f5f5', suit:'#c8102e', em:['bolt','#f2c12e'], skin:S1, hair:['short','#151515'], eyes:['dot'], mouth:'smile'},
+  martian:{cape:'#1e4fa3', suit:'#2e7d32', acc:[['xstrap','#c62828']], skin:'#3f9b45', hair:['bald'], x:[['brow','#2f7a35']], eyes:['color','#c62828'], mouth:'line'},
+  supergirl:{cape:'#c8102e', suit:'#1e4fa3', em:['diamond','#c8102e','#f2c12e'], skin:S1, back:['long','#f2d06b'], hair:['side','#f2d06b'], eyes:['color','#1e4fa3'], mouth:'smile', sh:1},
+  robin:{cape:'#f2c12e', suit:'#c8102e', acc:[['sleeves','#2e7d32']], em:['letterc','R'], skin:S1, hair:['short','#151515'], cover:['domino','#151515'], eyes:['white'], mouth:'smile'},
+  batgirl:{cape:'#2b2b2b', suit:'#5b2a86', em:['batoval','#f2c12e'], skin:S1, back:['long','#c0392b'], cover:['cowl','#5b2a86'], x:[['batears','#5b2a86']], eyes:['white'], mouth:'smile', sh:1},
+  joker:{suit:'#6a1b9a', acc:[['coat','#4a148c'],['tie','#2e7d32']], skin:'#f5f5f5', hair:['swept','#2e7d32'], eyes:['dot'], mouth:'grin'},
+  harley:{suit:'#c8102e', acc:[['split','#151515']], skin:'#f5f5f5', back:['twin'], hair:['short','#f2d06b'], cover:['domino','#151515'], eyes:['white'], mouth:'smile', sh:1},
+  lex:{suit:'#5b2a86', acc:[['armor','#2e7d32']], skin:S1, hair:['bald'], x:[['headshine']], eyes:['dot'], mouth:'smirk'},
+  darkseid:{big:1, suit:'#1e4fa3', acc:[['armor','#5d4037']], skin:'#6d6d6d', x:[['dshelm','#1e4fa3'],['rocks']], eyes:['color','#ff3b3b'], mouth:'frown', sh:1},
+  catwoman:{suit:'#151515', acc:[['zip','#6b6b6b']], skin:S1, cover:['cowl','#151515'], x:[['catears','#151515'],['goggles','#6a1b9a']], eyes:['none'], mouth:'smirk', sh:1},
+  deathstroke:{suit:'#1e4fa3', acc:[['sides','#151515'],['strap','#ff8f00']], head:'full', mask:'#151515', x:[['halforange','#ff8f00']], eyes:['one'], mouth:'none'},
+  atom:{suit:'#1e4fa3', acc:[['sides','#c8102e']], em:['atom','#c8102e'], skin:S1, cover:['cowl','#c8102e'], eyes:['white'], mouth:'smile'},
+  bluebeetle:{suit:'#1e4fa3', acc:[['plates','#151515']], head:'full', mask:'#1e4fa3', x:[['beetlehelm','#151515']], eyes:['beetle'], mouth:'none', sh:1},
+  constantine:{suit:'#ece4d2', acc:[['trench','#b59a78'],['tie','#c62828']], skin:S1, hair:['messy','#e0c060'], eyes:['dot'], mouth:'smirk'},
+  raven:{cape:'#2a1a4a', suit:'#2a1a4a', skin:'#b8b0c8', cover:['hood','#3a1f6b'], x:[['gem','#c62828']], eyes:['dot'], mouth:'line', sh:1},
+  starfire:{suit:'#5b2a86', skin:'#f0a050', back:['big','#c62828'], hair:['side','#c62828'], eyes:['color','#3ddc84'], mouth:'smile', sh:1},
+  blackadam:{cape:'#d4af37', suit:'#151515', em:['bolt','#d4af37'], skin:S3, hair:['peak','#151515'], eyes:['angry'], mouth:'frown'},
+  doomsday:{big:1, suit:'#6e6e6e', acc:[['bonespikes','#e0e0e0']], skin:'#9e9e9e', hair:['bald'], x:[['spikes','#e8e8e8']], eyes:['color','#ff3b3b'], mouth:'teeth', sh:1},
+  bane:{big:1, suit:'#424242', acc:[['tubes','#2e7d32']], head:'full', mask:'#151515', x:[['banemask','#3a3a3a']], eyes:['white'], mouth:'none'},
+  ivy:{suit:'#2e7d32', acc:[['leaves','#43a047']], skin:'#cde6b0', back:['long','#c62828'], hair:['side','#c62828'], x:[['leafcrown','#43a047']], eyes:['color','#2e7d32'], mouth:'smile', sh:1},
+  penguin:{suit:'#151515', acc:[['shirt','#f5f5f5'],['bow','#5b2a86']], skin:S1, x:[['tophat','#151515'],['beak'],['monocle']], eyes:['dot'], mouth:'smirk', sh:1},
+  riddler:{suit:'#2e7d32', acc:[['qmarks','#151515']], em:['q','#5b2a86'], skin:S1, x:[['bowler','#2e7d32']], cover:['domino','#5b2a86'], eyes:['white'], mouth:'smirk', sh:1},
+  zatanna:{suit:'#151515', acc:[['tux','#f5f5f5']], skin:S1, back:['long','#151515'], x:[['tophat','#151515']], eyes:['dot'], mouth:'smile', sh:1},
+  canary:{suit:'#151515', acc:[['jacket','#2b2b2b']], skin:S1, back:['long','#f2d06b'], hair:['side','#f2d06b'], eyes:['dot'], mouth:'open'},
+  cheetah:{suit:'#e0a030', skin:'#e0a030', back:['shoulder','#7a4a1a'], x:[['spots'],['catears','#e0a030']], eyes:['color','#2e7d32'], mouth:'teeth', sh:1},
+  reverseflash:{suit:'#f2c12e', em:['boltc','#c8102e'], skin:S1, cover:['cowl','#f2c12e'], x:[['flashwings','#c8102e']], eyes:['color','#c8102e'], mouth:'grin2', sh:1},
+};
+
+// --- body accents (never drawn in silhouette)
+const ACC = {
+  shoulders:(p, c) => p('M14 112 Q22 94 40 92 L44 104 Q30 106 22 120 Z', c) + p('M106 112 Q98 94 80 92 L76 104 Q90 106 98 120 Z', c),
+  band:(p, c) => `<rect x="0" y="114" width="120" height="6" fill="${c}"/><rect x="0" y="120" width="120" height="4" fill="#f5f5f5"/>`,
+  discs:(p, c) => [42, 54, 66, 78].map(x => `<circle cx="${x}" cy="104" r="4.5" fill="${c}" stroke="${INK}" stroke-width="2"/>`).join(''),
+  torn:(p, c) => p('M30 124 L34 108 L40 116 L46 104 L52 114 L60 102 L68 114 L74 104 L80 116 L86 108 L90 124 Z', c),
+  sides:(p, c) => p('M8 124 C10 104 22 94 34 92 L38 124 Z', c) + p('M112 124 C110 104 98 94 86 92 L82 124 Z', c),
+  belt:(p, c) => `<rect x="20" y="116" width="80" height="6" fill="${c}"/>`,
+  vneck:(p, c) => p('M44 90 L60 110 L76 90 Z', c),
+  quiver:(p, c) => p('M90 86 L100 84 L108 120 L98 122 Z', c),
+  necklace:(p, c) => `<path d="M40 92 Q60 108 80 92" fill="none" stroke="${c}" stroke-width="4"/>` + [46, 53, 60, 67, 74].map((x, i) => `<path d="M${x - 3} ${97 + (i === 2 ? 4 : i % 2 ? 3 : 0)} l3 7 l3 -7 Z" fill="${c}"/>`).join(''),
+  collarUp:(p, c) => p('M30 96 L24 66 L46 88 Z', c) + p('M90 96 L96 66 L74 88 Z', c),
+  sash:(p, c) => `<path d="M30 118 L90 112" stroke="${c}" stroke-width="7"/>`,
+  katanas:(p, c) => `<path d="M14 92 L30 70" stroke="${INK}" stroke-width="6" stroke-linecap="round"/><path d="M106 92 L90 70" stroke="${INK}" stroke-width="6" stroke-linecap="round"/>`,
+  coat:(p, c) => p('M30 124 L36 94 L52 92 L58 124 Z', c) + p('M90 124 L84 94 L68 92 L62 124 Z', c),
+  tie:(p, c) => p('M57 93 L63 93 L64 118 L60 123 L56 118 Z', c),
+  pecs:(p, c) => `<path d="M38 104 Q48 110 58 104 M62 104 Q72 110 82 104" fill="none" stroke="${c}" stroke-width="2.5"/>`,
+  collar:(p, c) => p('M40 92 Q60 102 80 92 L82 98 Q60 110 38 98 Z', c),
+  harness:(p, c) => `<path d="M34 94 L60 122 M86 94 L60 122" stroke="${c}" stroke-width="5"/>`,
+  armor:(p, c) => p('M18 110 Q24 94 42 91 L46 100 Q60 106 74 100 L78 91 Q96 94 102 110 L90 112 Q60 118 30 112 Z', c),
+  barkbody:(p, c) => `<path d="M30 124 Q34 104 40 96 M50 124 Q52 106 56 92 M70 124 Q68 106 66 92 M90 124 Q86 104 80 96" fill="none" stroke="${c}" stroke-width="3"/>`,
+  jacket:(p, c) => p('M24 124 L30 96 L50 92 L56 124 Z', c) + p('M96 124 L90 96 L70 92 L64 124 Z', c),
+  chain:(p, c) => `<path d="M30 104 Q60 120 90 104" fill="none" stroke="${c}" stroke-width="4" stroke-dasharray="5 3"/>`,
+  shine:(p, c) => `<path d="M34 102 Q44 96 54 98" fill="none" stroke="${c}" stroke-width="3" opacity=".8"/>`,
+  vest:(p, c) => p('M30 124 L34 96 L50 92 L56 124 Z', c) + p('M90 124 L86 96 L70 92 L64 124 Z', c),
+  rockbody:(p, c) => `<path d="M20 110 L34 104 L40 114 M52 96 L58 108 L70 104 M80 112 L92 104 L100 112 M44 120 L56 118" fill="none" stroke="${c}" stroke-width="2.5"/>`,
+  mandarin:(p, c) => p('M48 90 L60 104 L72 90 L68 89 L60 98 L52 89 Z', c),
+  scales:(p, c) => [96, 106, 116].map(y => `<path d="M14 ${y} ${Array.from({length:9}, () => 'q5 6 10 0').join(' ')}" fill="none" stroke="${c}" stroke-width="2.5"/>`).join(''),
+  plates:(p, c) => `<path d="M30 102 L50 98 L52 112 L32 116 Z M90 102 L70 98 L68 112 L88 116 Z" fill="${c}" stroke="${INK}" stroke-width="2"/>`,
+  strap:(p, c) => `<path d="M30 94 L86 124" stroke="${c}" stroke-width="7"/>`,
+  xstrap:(p, c) => `<path d="M32 94 L88 124 M88 94 L32 124" stroke="${c}" stroke-width="7"/>`,
+  sleeves:(p, c) => p('M8 124 C10 104 18 96 26 93 L28 124 Z', c) + p('M112 124 C110 104 102 96 94 93 L92 124 Z', c),
+  split:(p, c) => p('M60 89 C92 89 112 100 114 124 L60 124 Z', c),
+  zip:(p, c) => `<path d="M60 92 L60 124" stroke="${c}" stroke-width="3"/>`,
+  bustier:(p, c) => p('M30 112 Q45 100 60 108 Q75 100 90 112 L90 124 L30 124 Z', c) ,
+  trench:(p, c) => p('M8 124 C10 100 26 90 46 90 L56 124 Z', c) + p('M112 124 C110 100 94 90 74 90 L64 124 Z', c),
+  bonespikes:(p, c) => p('M24 100 L18 84 L32 96 Z', c) + p('M96 100 L102 84 L88 96 Z', c),
+  tubes:(p, c) => `<path d="M46 84 Q36 96 40 112 M74 84 Q84 96 80 112" fill="none" stroke="${c}" stroke-width="4"/>`,
+  leaves:(p, c) => [[36, 104], [50, 112], [70, 112], [84, 104]].map(([x, y]) => `<path d="M${x} ${y} q6 -8 12 0 q-6 8 -12 0" fill="${c}" stroke="${INK}" stroke-width="1.5"/>`).join(''),
+  shirt:(p, c) => p('M48 90 L60 124 L72 90 Z', c),
+  bow:(p, c) => p('M50 94 L60 98 L70 94 L70 102 L60 98 L50 102 Z', c),
+  qmarks:(p, c) => [[32, 112], [88, 110]].map(([x, y]) => `<text x="${x}" y="${y}" font-size="13" font-weight="900" fill="${c}" text-anchor="middle" font-family="sans-serif">?</text>`).join(''),
+  tux:(p, c) => p('M50 90 L60 116 L70 90 Z', c),
+};
+// --- chest emblems (generic shapes, never trademarked logos)
+const star5 = (cx, cy, R, r) => Array.from({length:10}, (_, i) => { const a = -Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? r : R; return `${(cx + Math.cos(a) * rr).toFixed(1)},${(cy + Math.sin(a) * rr).toFixed(1)}`; }).join(' ');
+const EM = {
+  reactor:() => `<circle cx="60" cy="106" r="7" fill="#bff6ff" stroke="${INK}" stroke-width="2"/><circle cx="60" cy="106" r="3" fill="#fff"/>`,
+  star:(p, c) => `<polygon points="${star5(60, 107, 10, 4)}" fill="${c}" stroke="${INK}" stroke-width="2"/>`,
+  spider:(p, c) => `<g stroke="${c}" stroke-width="2"><path d="M52 98 L60 104 L68 98 M50 106 L60 106 L70 106 M52 114 L60 108 L68 114"/></g><ellipse cx="60" cy="106" rx="3" ry="5" fill="${c}"/>`,
+  bigspider:(p, c) => `<path d="M60 96 Q56 104 40 98 Q50 106 36 116 Q52 110 58 118 L60 110 L62 118 Q68 110 84 116 Q70 106 80 98 Q64 104 60 96 Z" fill="${c}"/>`,
+  hourglass:(p, c) => `<path d="M54 112 L66 112 L60 118 Z M54 124 L66 124 L60 118 Z" fill="${c}"/>`,
+  amulet:() => `<circle cx="60" cy="104" r="7" fill="#e0b84b" stroke="${INK}" stroke-width="2"/><circle cx="60" cy="104" r="3" fill="#35c46a"/>`,
+  xcircle:() => `<circle cx="60" cy="110" r="8" fill="#c62828" stroke="${INK}" stroke-width="2"/><path d="M55 105 L65 115 M65 105 L55 115" stroke="${INK}" stroke-width="2.5"/>`,
+  circle:(p, c) => `<circle cx="60" cy="108" r="8" fill="${c}" stroke="${INK}" stroke-width="2"/>`,
+  bolt:(p, c) => `<path d="M64 96 L52 110 L60 110 L54 124 L70 106 L62 106 L68 96 Z" fill="${c}" stroke="${INK}" stroke-width="1.8"/>`,
+  boltc:(p, c) => `<circle cx="60" cy="108" r="10" fill="#f5f5f5" stroke="${INK}" stroke-width="2"/><path d="M63 99 L54 109 L60 109 L55 118 L67 106 L61 106 L66 99 Z" fill="${c}"/>`,
+  dd:(p, c) => `<path d="M48 102 Q60 96 72 102 M50 110 Q60 104 70 110" fill="none" stroke="${c}" stroke-width="3"/>`,
+  crescent:(p, c) => `<path d="M64 98 A10 10 0 1 0 64 118 A7 8 0 1 1 64 98 Z" fill="${c}"/>`,
+  four:() => `<circle cx="60" cy="108" r="9" fill="#f5f5f5" stroke="${INK}" stroke-width="2"/><text x="60" y="113" font-size="13" font-weight="900" fill="#1e4fa3" text-anchor="middle" font-family="sans-serif">4</text>`,
+  diamond:(p, c, c2) => `<path d="M48 100 L72 100 L76 106 L60 122 L44 106 Z" fill="${c2}" stroke="${INK}" stroke-width="2"/><path d="M52 104 L68 104 L60 116 Z" fill="${c}"/>`,
+  batoval:(p, c) => `<ellipse cx="60" cy="108" rx="13" ry="8" fill="${c}" stroke="${INK}" stroke-width="2"/><path d="M50 108 Q54 104 56 106 L58 103 L60 105 L62 103 L64 106 Q66 104 70 108 Q64 108 60 113 Q56 108 50 108 Z" fill="${INK}"/>`,
+  lantern:(p, c) => `<circle cx="60" cy="108" r="9" fill="#151515" stroke="${INK}" stroke-width="2"/><circle cx="60" cy="108" r="5.5" fill="none" stroke="${c}" stroke-width="2.5"/>`,
+  letterc:(p, ch) => `<circle cx="72" cy="104" r="7" fill="#f2c12e" stroke="${INK}" stroke-width="2"/><text x="72" y="108" font-size="10" font-weight="900" fill="${INK}" text-anchor="middle" font-family="sans-serif">${ch}</text>`,
+  atom:(p, c) => `<g fill="none" stroke="${c}" stroke-width="2"><ellipse cx="60" cy="108" rx="10" ry="4"/><ellipse cx="60" cy="108" rx="10" ry="4" transform="rotate(60 60 108)"/><ellipse cx="60" cy="108" rx="10" ry="4" transform="rotate(-60 60 108)"/></g><circle cx="60" cy="108" r="2.5" fill="${c}"/>`,
+  q:(p, c) => `<text x="60" y="116" font-size="20" font-weight="900" fill="${c}" text-anchor="middle" font-family="sans-serif">?</text>`,
+};
+// --- hair (back layer drawn before the head, front layer after)
+const BACK = {
+  long:(p, c) => p('M36 56 Q30 22 60 20 Q90 22 84 56 L90 98 Q78 96 74 80 L46 80 Q42 96 30 98 Z', c),
+  shoulder:(p, c) => p('M37 56 Q32 22 60 21 Q88 22 83 56 L86 84 Q76 84 74 74 L46 74 Q44 84 34 84 Z', c),
+  big:(p, c) => p('M30 62 Q16 12 60 12 Q104 12 90 62 L102 110 Q82 104 76 82 L44 82 Q38 104 18 110 Z', c),
+  twin:(p) => p('M40 40 Q22 34 16 50 Q14 64 26 72 Q26 56 40 48 Z', '#c8102e') + p('M80 40 Q98 34 104 50 Q106 64 94 72 Q94 56 80 48 Z', '#1e4fa3'),
+};
+const HAIR = {
+  short:(p, c) => p('M39 48 Q37 26 60 26 Q83 26 81 48 Q76 36 60 37 Q46 37 39 48 Z', c),
+  side:(p, c) => p('M39 52 Q35 24 62 25 Q85 27 81 50 Q72 34 52 38 Q44 42 39 52 Z', c),
+  swept:(p, c) => p('M38 48 Q34 24 58 22 Q76 18 88 26 Q80 26 84 34 Q76 30 80 40 Q70 34 56 36 Q44 38 38 48 Z', c),
+  messy:(p, c) => p('M38 50 L34 38 L42 38 L38 28 L48 32 L50 22 L58 30 L64 20 L68 30 L78 24 L76 34 L86 36 L80 42 L82 50 Q76 38 60 38 Q46 38 38 50 Z', c),
+  mohawk:(p, c) => p('M40 46 Q40 32 50 30 L52 22 Q60 14 68 22 L70 30 Q80 32 80 46 Q74 38 60 38 Q46 38 40 46 Z', c),
+  peak:(p, c) => p('M39 50 Q37 26 60 26 Q83 26 81 50 Q76 36 66 36 L60 46 L54 36 Q44 36 39 50 Z', c),
+  curl:(p, c) => p('M39 48 Q37 26 60 26 Q83 26 81 48 Q76 36 60 37 Q46 37 39 48 Z', c) + `<path d="M58 36 q-6 4 -1 9 q3 2 4 -1" fill="none" stroke="${c}" stroke-width="3"/>`,
+  temples:(p, c) => p('M39 48 Q37 26 60 26 Q83 26 81 48 Q76 36 60 37 Q46 37 39 48 Z', c) + `<path d="M40 46 L42 36 M80 46 L78 36" stroke="#e8e8e8" stroke-width="3"/>`,
+  bald:() => '',
+};
+const COVER = {
+  // [before-head, after-head]
+  cowl:(p, c) => ['', p('M38 61 Q36 26 60 26 Q84 26 82 61 L77 64 Q71 57 60 59 Q49 57 43 64 Z', c)],
+  domino:(p, c) => ['', p('M40 48 Q60 42 80 48 L79 57 Q70 61 60 55 Q50 61 41 57 Z', c)],
+  helmet:(p, c) => ['', p('M37 66 L37 50 Q36 25 60 25 Q84 25 83 50 L83 66 L77 66 L77 48 Q70 42 60 42 Q50 42 43 48 L43 66 Z', c)],
+  hood:(p, c) => [p('M30 94 Q22 28 60 18 Q98 28 90 94 Z', c), p('M38 52 Q40 27 60 26 Q80 27 82 52 Q74 35 60 35 Q46 35 38 52 Z', c)],
+};
+// --- headgear & specials; inner:true parts are skipped in silhouettes
+const inner = f => (f.inner = true, f);
+const X = {
+  faceplate:inner((p, c) => p('M44 42 L76 42 L74 68 Q60 80 46 68 Z', c)),
+  capwings:(p, c) => p('M38 48 L24 40 L28 47 L22 50 L36 55 Z', c) + p('M82 48 L96 40 L92 47 L98 50 L84 55 Z', c),
+  letter:inner((p, ch, c) => `<text x="60" y="40" font-size="12" font-weight="900" fill="${c}" text-anchor="middle" font-family="sans-serif">${ch}</text>`),
+  web:inner(() => `<g fill="none" stroke="${INK}" stroke-width="1.2" opacity=".7"><path d="M60 29 L60 79 M39 54 L81 54 M45 36 L75 72 M75 36 L45 72"/><ellipse cx="60" cy="54" rx="9" ry="10"/><ellipse cx="60" cy="54" rx="16" ry="18"/></g>`),
+  catears:(p, c) => p('M42 36 L44 22 L52 31 Z', c) + p('M78 36 L76 22 L68 31 Z', c),
+  plines:inner((p, c) => `<path d="M60 30 L60 46 M50 34 L54 46 M70 34 L66 46" stroke="${c}" stroke-width="2"/>`),
+  fins:(p, c) => p('M41 50 Q30 34 30 16 Q40 32 50 40 Q46 44 41 50 Z', c) + p('M79 50 Q90 34 90 16 Q80 32 70 40 Q74 44 79 50 Z', c),
+  eyepatches:inner((p, c) => p('M41 44 Q52 42 58 50 Q54 60 42 58 Z', c) + p('M79 44 Q68 42 62 50 Q66 60 78 58 Z', c)),
+  wandacrown:(p, c) => p('M40 40 L44 26 L52 36 L60 22 L68 36 L76 26 L80 40 Q60 34 40 40 Z', c),
+  antennae:(p, c) => `<path d="M48 31 Q42 16 36 10 M72 31 Q78 16 84 10" fill="none" stroke="${INK}" stroke-width="3"/>`,
+  antstripe:inner((p, c) => p('M55 29 L65 29 L64 46 L56 46 Z', c)),
+  pointyears:(p, c) => p('M40 54 L28 44 L40 62 Z', c) + p('M80 54 L92 44 L80 62 Z', c),
+  ridge:(p, c) => p('M56 25 L64 25 L62 42 L58 42 Z', c),
+  circlet:inner((p, c) => `<path d="M40 40 Q60 34 80 40" fill="none" stroke="${c}" stroke-width="3"/><circle cx="60" cy="37" r="2.5" fill="#c62828"/>`),
+  visor:(p, c) => p('M36 46 L84 46 L84 58 L36 58 Z', '#f2c12e') + p('M40 48 L80 48 L80 56 L40 56 Z', c),
+  chinlines:inner(() => `<path d="M50 66 L52 76 M56 68 L57 78 M64 68 L63 78 M70 66 L68 76" stroke="#5a3d86" stroke-width="2"/>`),
+  horns:(p, c) => p('M44 34 Q32 14 36 -2 Q46 14 52 28 Z', c) + p('M76 34 Q88 14 84 -2 Q74 14 68 28 Z', c),
+  bark:inner(() => `<path d="M46 34 L48 50 M58 30 L56 44 M70 34 L68 48 M44 66 L50 72 M74 64 L70 72" stroke="#5a3d24" stroke-width="2.2"/>`),
+  twigs:(p, c) => `<path d="M48 31 L42 16 M42 22 L36 18 M66 30 L72 12 M70 18 L78 16 M58 29 L58 18" stroke="#6d4c2f" stroke-width="4" stroke-linecap="round"/><path d="M36 14 q4 -6 8 0 q-4 6 -8 0 M74 10 q4 -6 8 0 q-4 6 -8 0" fill="${c}"/>`,
+  slmask:inner((p, c) => p('M40 46 L80 46 L76 62 L44 62 Z', c) + `<path d="M48 32 L52 44 M72 32 L68 44" stroke="${c}" stroke-width="3"/>`),
+  vlines:inner((p, c) => `<path d="M48 34 L46 48 M72 34 L74 48 M52 72 L56 66 M68 72 L64 66" stroke="${c}" stroke-width="2"/>`),
+  gem:inner((p, c) => `<path d="M60 33 L65 39 L60 45 L55 39 Z" fill="${c}" stroke="${INK}" stroke-width="2"/>`),
+  flames:(p) => p('M36 60 Q26 40 36 30 Q34 40 42 40 Q38 22 50 12 Q50 26 58 26 Q58 10 70 4 Q66 20 74 28 Q80 20 84 14 Q86 28 82 38 Q92 34 90 22 Q98 44 84 62 Q86 44 76 36 Q70 30 60 30 Q46 30 40 40 Q36 48 36 60 Z', '#ff8f00') + p('M44 40 Q42 30 50 22 Q50 32 56 32 Q58 20 66 14 Q64 26 72 32 Q76 28 78 24 Q80 34 76 40 Q70 32 60 32 Q50 32 44 40 Z', '#ffd23f'),
+  ddhorns:(p, c) => p('M46 33 L44 18 L52 30 Z', c) + p('M74 33 L76 18 L68 30 Z', c),
+  headshine:inner(() => `<path d="M48 34 Q54 30 60 31" fill="none" stroke="#fff" stroke-width="3" opacity=".8"/>`),
+  goblinhat:(p, c) => p('M36 42 Q40 26 60 24 Q72 8 92 2 Q80 14 82 30 Q84 38 84 44 Q60 34 36 42 Z', c),
+  rocks:inner(() => `<path d="M44 40 L50 46 L46 52 M70 36 L74 44 L80 44 M48 66 L54 70 M66 66 L72 70 L70 76" fill="none" stroke="#8a4b1c" stroke-width="2" opacity=".7"/>`),
+  brow:inner((p, c) => p('M40 46 Q60 38 80 46 L80 50 Q60 44 40 50 Z', c)),
+  rivets:inner(() => [[44, 40], [76, 40], [44, 66], [76, 66]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.8" fill="${INK}"/>`).join('')),
+  batears:(p, c) => p('M42 38 L40 12 L52 30 Z', c) + p('M78 38 L80 12 L68 30 Z', c),
+  tiara:(p, c) => p('M40 40 Q60 30 80 40 L78 44 Q60 36 42 44 Z', c) + `<polygon points="${star5(60, 36, 5, 2)}" fill="#c8102e" stroke="${INK}" stroke-width="1.2"/>`,
+  flashwings:(p, c) => p('M38 54 L26 46 L32 53 L22 56 L38 60 Z', c) + p('M82 54 L94 46 L88 53 L98 56 L82 60 Z', c),
+  cybhalf:(p, c) => p('M60 29 Q81 29 81 54 Q81 79 60 79 Z', c) + `<path d="M64 40 L76 40 M64 66 L76 66" stroke="${INK}" stroke-width="1.5"/>`,
+  domino2:inner((p, c) => p('M42 48 Q60 43 78 48 L77 56 Q70 60 60 54 Q50 60 43 56 Z', c)),
+  dshelm:(p, c) => p('M36 70 L36 46 Q36 30 46 30 L46 70 Z', c) + p('M84 70 L84 46 Q84 30 74 30 L74 70 Z', c),
+  goggles:(p, c) => `<circle cx="51" cy="52" r="6.5" fill="${c}" stroke="${INK}" stroke-width="2.5"/><circle cx="69" cy="52" r="6.5" fill="${c}" stroke="${INK}" stroke-width="2.5"/>`,
+  halforange:inner((p, c) => p('M60 29 Q39 29 39 54 Q39 79 60 79 Z', c)),
+  beetlehelm:inner((p, c) => `<path d="M60 30 L60 46 M44 36 L52 44 M76 36 L68 44" stroke="${c}" stroke-width="3"/>`),
+  spikes:(p, c) => p('M42 36 L34 18 L48 30 Z', c) + p('M54 30 L56 10 L62 28 Z', c) + p('M68 30 L78 12 L76 34 Z', c),
+  banemask:inner((p, c) => `<path d="M48 64 L72 64 M52 70 L68 70 M60 30 L60 46" stroke="${c}" stroke-width="2"/><circle cx="60" cy="72" r="3" fill="${c}"/>`),
+  leafcrown:(p, c) => [[42, 36, -50], [50, 29, -25], [60, 26, 0], [70, 29, 25], [78, 36, 50]].map(([x, y, r]) => `<ellipse cx="${x}" cy="${y - 5}" rx="4" ry="8" transform="rotate(${r} ${x} ${y})" fill="${c}" stroke="${INK}" stroke-width="1.5"/>`).join(''),
+  tophat:(p, c) => p('M34 34 L86 34 L86 38 L34 38 Z', c) + p('M42 34 L44 6 L76 6 L78 34 Z', c) + `<rect x="43" y="26" width="34" height="5" fill="#5b2a86"/>`,
+  beak:inner(() => `<path d="M58 54 L60 66 L64 56 Z" fill="#e0a070" stroke="${INK}" stroke-width="2"/>`),
+  monocle:inner(() => `<circle cx="68" cy="51" r="6" fill="none" stroke="#d4af37" stroke-width="2.5"/><path d="M74 52 Q80 66 74 80" fill="none" stroke="#d4af37" stroke-width="1.5"/>`),
+  bowler:(p, c) => p('M34 38 Q60 30 86 38 L86 42 Q60 36 34 42 Z', c) + p('M42 37 Q42 14 60 14 Q78 14 78 37 Z', c) + `<text x="60" y="32" font-size="12" font-weight="900" fill="#5b2a86" text-anchor="middle" font-family="sans-serif">?</text>`,
+  spots:inner(() => [[46, 36], [72, 34], [44, 66], [76, 64], [60, 30], [52, 74], [70, 74]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="2.6" fill="#5d4037"/>`).join('')),
+};
+const BEARD = {
+  full:(p, c) => p('M40 58 Q42 80 60 84 Q78 80 80 58 Q74 70 60 72 Q46 70 40 58 Z', c),
+  goatee:(p, c) => p('M54 70 Q60 82 66 70 Q60 74 54 70 Z', c) + `<path d="M52 64 Q60 60 68 64" fill="none" stroke="${c}" stroke-width="2.5"/>`,
+  sideburns:(p, c) => p('M40 54 L46 54 L48 70 L42 66 Z', c) + p('M80 54 L74 54 L72 70 L78 66 Z', c),
+};
+const EYES = {
+  dot:() => `<circle cx="52" cy="53" r="2.8" fill="${INK}"/><circle cx="68" cy="53" r="2.8" fill="${INK}"/>`,
+  color:(p, c) => `<circle cx="52" cy="53" r="3.2" fill="${c}" stroke="${INK}" stroke-width="1.5"/><circle cx="68" cy="53" r="3.2" fill="${c}" stroke="${INK}" stroke-width="1.5"/>`,
+  dark:() => `<circle cx="52" cy="53" r="4" fill="#2b1a10"/><circle cx="68" cy="53" r="4" fill="#2b1a10"/><circle cx="53" cy="52" r="1.2" fill="#fff"/><circle cx="69" cy="52" r="1.2" fill="#fff"/>`,
+  white:() => `<ellipse cx="51" cy="52" rx="4.5" ry="3" fill="#fff" stroke="${INK}" stroke-width="1.8"/><ellipse cx="69" cy="52" rx="4.5" ry="3" fill="#fff" stroke="${INK}" stroke-width="1.8"/>`,
+  tint:(p, c) => `<ellipse cx="51" cy="52" rx="4.5" ry="3" fill="${c}" stroke="${INK}" stroke-width="1.8"/><ellipse cx="69" cy="52" rx="4.5" ry="3" fill="${c}" stroke="${INK}" stroke-width="1.8"/>`,
+  lens:(p) => p('M43 50 Q50 45 57 50 Q52 57 44 54 Z', '#fff') + p('M77 50 Q70 45 63 50 Q68 57 76 54 Z', '#fff'),
+  big:(p) => p('M42 52 Q45 39 57 46 Q57 58 44 59 Z', '#fff') + p('M78 52 Q75 39 63 46 Q63 58 76 59 Z', '#fff'),
+  slit:() => `<path d="M45 50 L56 51 L55 54 L45 53 Z M75 50 L64 51 L65 54 L75 53 Z" fill="#bff6ff" stroke="${INK}" stroke-width="1.5"/>`,
+  glow:(p, c) => `<ellipse cx="51" cy="53" rx="5" ry="3" fill="${c}" stroke="${INK}" stroke-width="1.5"/><ellipse cx="69" cy="53" rx="5" ry="3" fill="${c}" stroke="${INK}" stroke-width="1.5"/>`,
+  jag:(p) => p('M38 42 Q50 44 58 56 Q48 60 42 56 L44 52 L40 50 Z', '#fff') + p('M82 42 Q70 44 62 56 Q72 60 78 56 L76 52 L80 50 Z', '#fff'),
+  socket:() => `<ellipse cx="51" cy="52" rx="6" ry="5" fill="${INK}"/><ellipse cx="69" cy="52" rx="6" ry="5" fill="${INK}"/><path d="M58 62 L60 58 L62 62 Z" fill="${INK}"/>`,
+  one:(p) => p('M64 50 L78 49 L77 54 L64 54 Z', '#fff'),
+  angry:() => `<circle cx="52" cy="54" r="2.8" fill="${INK}"/><circle cx="68" cy="54" r="2.8" fill="${INK}"/><path d="M45 46 L56 50 M75 46 L64 50" stroke="${INK}" stroke-width="2.5"/>`,
+  beetle:(p) => p('M42 46 L58 50 L56 60 L44 58 Z', '#7fd3ff') + p('M78 46 L62 50 L64 60 L76 58 Z', '#7fd3ff'),
+  cyb:() => `<circle cx="52" cy="53" r="2.8" fill="${INK}"/><circle cx="69" cy="53" r="4" fill="#ff3b3b" stroke="${INK}" stroke-width="1.5"/>`,
+  none:() => '',
+};
+const MOUTH = {
+  none:() => '',
+  line:() => `<path d="M54 67 Q60 69 66 67" fill="none" stroke="${INK}" stroke-width="2.2"/>`,
+  smile:() => `<path d="M53 65 Q60 72 67 65" fill="none" stroke="${INK}" stroke-width="2.4"/>`,
+  frown:() => `<path d="M54 69 Q60 65 66 69" fill="none" stroke="${INK}" stroke-width="2.4"/>`,
+  smirk:() => `<path d="M53 67 Q60 69 67 64" fill="none" stroke="${INK}" stroke-width="2.4"/>`,
+  open:() => `<ellipse cx="60" cy="67" rx="4" ry="3" fill="${INK}"/>`,
+  slot:() => `<path d="M52 67 L68 67" stroke="${INK}" stroke-width="3"/>`,
+  grin:() => `<path d="M42 62 Q60 80 78 62 Q60 72 42 62 Z" fill="#c62828" stroke="${INK}" stroke-width="2"/><path d="M46 65 Q60 73 74 65" fill="none" stroke="#fff" stroke-width="2"/>`,
+  grin2:() => `<path d="M46 64 Q60 76 74 64 Q60 70 46 64 Z" fill="#fff" stroke="${INK}" stroke-width="2"/>`,
+  teeth:() => `<path d="M48 64 L72 64 L70 72 L50 72 Z" fill="#fff" stroke="${INK}" stroke-width="2"/><path d="M54 64 L54 72 M60 64 L60 72 M66 64 L66 72" stroke="${INK}" stroke-width="1.5"/>`,
+  sharp:() => `<path d="M46 62 Q60 76 74 62 Z" fill="${INK}"/><path d="M48 63 L51 68 L54 64 L57 69 L60 64 L63 69 L66 64 L69 68 L72 63" fill="#fff"/>`,
+  venom:() => `<path d="M38 62 Q60 86 82 62 Q60 70 38 62 Z" fill="#fff" stroke="${INK}" stroke-width="2"/><path d="M42 64 L46 70 L50 66 L54 74 L58 67 L62 74 L66 67 L70 73 L74 66 L78 64" fill="none" stroke="${INK}" stroke-width="1.8"/><path d="M56 72 Q60 86 66 78" fill="#e05a8a" stroke="${INK}" stroke-width="1.5"/>`,
+};
+const HEADS = {
+  skull:(p, L) => p('M39 52 Q39 28 60 28 Q81 28 81 52 Q81 64 74 68 L72 78 L48 78 L46 68 Q39 64 39 52 Z', L.skull),
+  raccoon:(p, L, sil) => p('M38 40 L34 20 L48 32 Z', L.skin) + p('M82 40 L86 20 L72 32 Z', L.skin) + p('M36 56 Q36 30 60 30 Q84 30 84 56 Q84 76 60 80 Q36 76 36 56 Z', L.skin) +
+    (sil ? '' : p('M40 48 Q60 42 80 48 L80 58 Q60 54 40 58 Z', '#3e2c23') + p('M48 62 Q60 56 72 62 Q72 76 60 78 Q48 76 48 62 Z', '#efe3d3') + `<ellipse cx="60" cy="63" rx="3.5" ry="2.5" fill="${INK}"/>`),
+};
+const artIds = {n:0};
+function portrait(id, sil = false) {
+  const L = LOOK[id]; if (!L) return '';
+  const c = x => sil ? INK : x;
+  const st = sil ? '' : ` stroke="${INK}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"`;
+  const p = (d, f) => `<path d="${d}" fill="${c(f)}"${st}/>`;
+  const o = [];
+  if (L.cape) o.push(p('M8 124 L18 94 Q60 82 102 94 L112 124 Z', L.cape));
+  const cover = L.cover ? COVER[L.cover[0]](p, L.cover[1]) : ['', ''];
+  o.push(p(L.big ? BODY_BIG : BODY, L.suit));
+  if (!sil) { for (const [t, col] of L.acc || []) o.push(ACC[t](p, col)); if (L.em) o.push(EM[L.em[0]](p, L.em[1], L.em[2])); }
+  if (L.back) o.push(BACK[L.back[0]](p, L.back[1]));
+  o.push(cover[0]);
+  const headFill = L.head === 'full' ? L.mask : (L.head === 'skull' ? L.skull : L.skin);
+  o.push(p('M51 70 L51 93 L69 93 L69 70 Z', L.head === 'skull' ? '#2b2b2b' : headFill));
+  o.push(HEADS[L.head] ? HEADS[L.head](p, L, sil) : `<ellipse cx="60" cy="54" rx="21" ry="25" fill="${c(headFill)}"${st}/>`);
+  if (L.hair) o.push(HAIR[L.hair[0]](p, L.hair[1]));
+  o.push(cover[1]);
+  for (const [n, ...a] of L.x || []) { const f = X[n]; if (f && !(sil && f.inner)) o.push(f(p, ...a)); }
+  if (!sil) { if (L.beard) o.push(BEARD[L.beard[0]](p, L.beard[1])); const [e, ec] = L.eyes || ['dot']; o.push(EYES[e](p, ec)); o.push(MOUTH[L.mouth || 'line']()); }
+  // silhouettes: flood every drawn pixel with ink so no colour detail leaks through
+  const g = sil ? `<filter id="silf"><feFlood flood-color="${INK}"/><feComposite in2="SourceAlpha" operator="in"/></filter><g filter="url(#silf)">${o.join('')}</g>` : o.join('');
+  return `<svg viewBox="0 0 120 120" class="art" aria-hidden="true">${g}</svg>`;
+}
+
+// --- item icons (viewBox 100)
+const sk = ` stroke="${INK}" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"`;
+const ip = (d, f) => `<path d="${d}" fill="${f}"${sk}/>`;
+const arrow = (x1, y1, x2, y2, col, head) => {
+  const a = Math.atan2(y2 - y1, x2 - x1), ca = Math.cos(a), sa = Math.sin(a);
+  const hx = x2 - ca * 12, hy = y2 - sa * 12;
+  return `<path d="M${x1} ${y1} L${hx} ${hy}" stroke="${INK}" stroke-width="7" stroke-linecap="round"/><path d="M${x1} ${y1} L${hx} ${hy}" stroke="${col}" stroke-width="3.5" stroke-linecap="round"/>` +
+    (head || ip(`M${x2} ${y2} L${hx - sa * 7} ${hy + ca * 7} L${hx + sa * 7} ${hy - ca * 7} Z`, '#9aa1aa')) +
+    ip(`M${x1} ${y1} L${x1 + ca * 12 - sa * 7} ${y1 + sa * 12 + ca * 7} L${x1 + ca * 16} ${y1 + sa * 16} L${x1 + ca * 12 + sa * 7} ${y1 + sa * 12 - ca * 7} Z`, col);
+};
+const ITEM_ART = {
+  'ironman:0':`<circle cx="50" cy="50" r="38" fill="#3a3f4a"${sk}/><circle cx="50" cy="50" r="27" fill="#bff6ff"${sk}/><path d="M50 72 L29 36 L71 36 Z" fill="#f2feff" stroke="#3cc7e0" stroke-width="3"/><circle cx="50" cy="48" r="8" fill="#fff" stroke="#3cc7e0" stroke-width="3"/>`,
+  'cap:0':`<circle cx="50" cy="50" r="44" fill="#c8102e"${sk}/><circle cx="50" cy="50" r="34" fill="#f5f5f5"${sk}/><circle cx="50" cy="50" r="25" fill="#c8102e"${sk}/><circle cx="50" cy="50" r="17" fill="#1f3a93"${sk}/><polygon points="${star5(50, 51, 15, 6)}" fill="#f5f5f5" stroke="${INK}" stroke-width="2"/>`,
+  'thor:0':`<g transform="rotate(-28 50 50)"><rect x="44" y="46" width="12" height="42" rx="3" fill="#6d4c2f"${sk}/><path d="M44 60 L56 64 M44 70 L56 74 M44 80 L56 84" stroke="${INK}" stroke-width="2"/><path d="M50 88 Q38 98 46 100 Q56 100 50 88" fill="none" stroke="#6d4c2f" stroke-width="4"/><rect x="18" y="14" width="64" height="36" rx="5" fill="#a9b2bd"${sk}/><rect x="26" y="20" width="48" height="24" rx="3" fill="#c9d1da" stroke="#7d8793" stroke-width="2"/></g>`,
+  'thor:1':`<g transform="rotate(24 50 50)"><rect x="45" y="10" width="10" height="84" rx="4" fill="#8d6e63"${sk}/>${ip('M55 18 Q90 10 92 36 Q84 52 55 42 Z', '#b0b8c2')}<rect x="26" y="20" width="20" height="20" rx="3" fill="#8a939e"${sk}/></g>`,
+  'spidey:0':`<path d="M50 58 L94 20 M50 60 L96 44 M50 62 L86 82 M66 44 Q72 52 70 64 M80 32 Q88 46 82 70" fill="none" stroke="${INK}" stroke-width="5"/><path d="M50 58 L94 20 M50 60 L96 44 M50 62 L86 82 M66 44 Q72 52 70 64 M80 32 Q88 46 82 70" fill="none" stroke="#fff" stroke-width="2.5"/><rect x="6" y="48" width="44" height="26" rx="8" fill="#b0b8c2"${sk}/><rect x="12" y="54" width="32" height="14" rx="4" fill="#d32f2f"${sk}/><rect x="44" y="54" width="10" height="12" rx="2" fill="#7d8793"${sk}/>`,
+  'widow:0':`<rect x="14" y="36" width="72" height="30" rx="14" fill="#262626"${sk}/><rect x="22" y="44" width="56" height="14" rx="7" fill="#c62828"/>${ip('M54 22 L40 52 L52 52 L44 80 L66 44 L54 44 L62 22 Z', '#ffd23f')}`,
+  'hawkeye:0':arrow(14, 84, 86, 14, '#7b3fb0') + arrow(14, 60, 86, 34, '#5b2a86'),
+  'panther:0':`<circle cx="50" cy="52" r="34" fill="#6c3fc5" opacity=".25"/><path d="M14 26 Q50 74 86 26" fill="none" stroke="${INK}" stroke-width="8"/><path d="M14 26 Q50 74 86 26" fill="none" stroke="#c0c0c0" stroke-width="4"/>` + [[24, 40], [36, 50], [50, 54], [64, 50], [76, 40]].map(([x, y]) => ip(`M${x - 5} ${y - 2} L${x} ${y + 18} L${x + 5} ${y - 2} Z`, '#e0e0e0')).join(''),
+  'strange:0':`<path d="M50 4 L50 18" stroke="#c9a227" stroke-width="4"/><circle cx="50" cy="52" r="36" fill="#d4af37"${sk}/><circle cx="50" cy="52" r="27" fill="#a07d1c"${sk}/>${ip('M24 52 Q50 28 76 52 Q50 76 24 52 Z', '#f5f0dd')}<circle cx="50" cy="52" r="10" fill="#35c46a"${sk}/><circle cx="50" cy="52" r="4" fill="${INK}"/>`,
+  'strange:1':`${ip('M28 22 L72 22 L88 92 Q50 82 12 92 Z', '#b71c1c')}${ip('M28 22 L18 4 L42 18 Z', '#b71c1c')}${ip('M72 22 L82 4 L58 18 Z', '#b71c1c')}<path d="M34 40 L28 88 M66 40 L72 88 M50 30 L50 84" stroke="#7f1010" stroke-width="2"/><circle cx="36" cy="24" r="4.5" fill="#e0b84b"${sk}/><circle cx="64" cy="24" r="4.5" fill="#e0b84b"${sk}/>`,
+  'wolverine:0':`${ip('M36 54 L30 6 L42 50 Z', '#cfd8dc')}${ip('M48 52 L50 2 L54 52 Z', '#cfd8dc')}${ip('M60 54 L70 6 L64 54 Z', '#cfd8dc')}<rect x="24" y="50" width="52" height="38" rx="12" fill="${S1}"${sk}/><path d="M38 56 L38 66 M50 56 L50 66 M62 56 L62 66" stroke="${INK}" stroke-width="2.5"/>`,
+  'deadpool:0':`<g transform="rotate(40 50 50)"><rect x="47" y="4" width="6" height="64" rx="2" fill="#dfe5ea"${sk}/><rect x="40" y="66" width="20" height="5" rx="2" fill="#d4af37"${sk}/><rect x="46" y="70" width="8" height="24" rx="2" fill="#b71c1c"${sk}/></g><g transform="rotate(-40 50 50)"><rect x="47" y="4" width="6" height="64" rx="2" fill="#dfe5ea"${sk}/><rect x="40" y="66" width="20" height="5" rx="2" fill="#d4af37"${sk}/><rect x="46" y="70" width="8" height="24" rx="2" fill="#151515"${sk}/></g>`,
+  'antman:0':`${ip('M36 12 H64 V22 H60 V78 Q60 92 50 92 Q40 92 40 78 V22 H36 Z', '#e3f2fd')}<path d="M41 46 H59 V78 Q59 90 50 90 Q41 90 41 78 Z" fill="#e53935"/><circle cx="46" cy="58" r="2.5" fill="#ffcdd2"/><circle cx="54" cy="68" r="2" fill="#ffcdd2"/><circle cx="48" cy="78" r="2.5" fill="#ffcdd2"/><rect x="34" y="6" width="32" height="8" rx="3" fill="#9aa1aa"${sk}/>`,
+  'profx:0':`${ip('M14 66 Q14 18 50 18 Q86 18 86 66 Z', '#b0b8c2')}<path d="M26 64 Q26 30 50 28 M74 64 Q74 30 50 28 M50 18 L50 66" fill="none" stroke="#7d8793" stroke-width="3"/>${ip('M14 60 L86 60 L86 70 L14 70 Z', '#3d7bff')}<path d="M20 70 Q14 86 22 96 M80 70 Q86 86 78 96 M50 70 L50 96" fill="none" stroke="${INK}" stroke-width="4"/>`,
+  'magneto:0':`${ip('M18 84 L18 42 Q18 10 50 10 Q82 10 82 42 L82 84 L66 84 L66 52 Q50 42 34 52 L34 84 Z', '#8e1b2b')}${ip('M44 12 L56 12 L54 46 L46 46 Z', '#b02a3c')}<path d="M18 84 L18 42 Q18 10 50 10 Q82 10 82 42 L82 84" fill="none" stroke="#5b2a86" stroke-width="3" transform="translate(0 -4)"/>`,
+  'cyclops:0':`${ip('M6 46 Q50 30 94 46 L92 64 Q50 50 8 64 Z', '#f2c12e')}${ip('M18 48 Q50 38 82 48 L80 58 Q50 48 20 58 Z', '#d32f2f')}<path d="M26 50 Q40 46 50 46" stroke="#ff8a80" stroke-width="2.5" fill="none"/>`,
+  'thanos:0':`${ip('M26 92 L26 52 L22 30 Q22 24 28 24 Q32 24 33 30 L36 46 L36 18 Q36 12 42 12 Q48 12 48 18 L48 44 L50 14 Q50 8 56 8 Q62 8 62 14 L61 44 L64 20 Q64 14 70 14 Q76 14 75 20 L72 50 L80 40 Q86 36 88 42 L76 72 L72 92 Z', '#d4af37')}` + [['#7b3fb0', 33, 38], ['#3d7bff', 43, 30], ['#e53935', 55, 28], ['#ff8f00', 67, 32], ['#35c46a', 80, 46], ['#ffd23f', 50, 66]].map(([col, x, y]) => `<circle cx="${x}" cy="${y}" r="${y > 60 ? 9 : 5}" fill="${col}"${sk}/>`).join(''),
+  'loki:0':`<g transform="rotate(30 50 50)"><rect x="46" y="30" width="8" height="66" rx="3" fill="#d4af37"${sk}/>${ip('M50 34 Q30 26 32 4 Q42 18 50 18 Q58 18 68 4 Q70 26 50 34 Z', '#d4af37')}<circle cx="50" cy="26" r="6.5" fill="#4fc3f7"${sk}/></g>`,
+  'starlord:0':`<path d="M24 34 Q50 -4 76 34" fill="none" stroke="${INK}" stroke-width="6"/><path d="M24 34 Q50 -4 76 34" fill="none" stroke="#9aa1aa" stroke-width="3"/><ellipse cx="22" cy="36" rx="8" ry="10" fill="#ff7043"${sk}/><ellipse cx="78" cy="36" rx="8" ry="10" fill="#ff7043"${sk}/><rect x="24" y="44" width="52" height="50" rx="6" fill="#3d6db5"${sk}/><rect x="32" y="52" width="36" height="20" rx="3" fill="#cfd8dc"${sk}/><circle cx="42" cy="62" r="4" fill="${INK}"/><circle cx="58" cy="62" r="4" fill="${INK}"/><rect x="32" y="78" width="10" height="8" fill="#ff7043"${sk}/><rect x="46" y="78" width="10" height="8" fill="#ff7043"${sk}/>`,
+  'vision:0':`<g stroke="#ffd23f" stroke-width="3" opacity=".6"><path d="M50 4 L50 12 M90 46 L82 46 M10 46 L18 46 M80 14 L74 20 M20 14 L26 20"/></g>${ip('M50 14 L80 40 L66 86 L34 86 L20 40 Z', '#f2c12e')}<path d="M50 14 L50 86 M20 40 L80 40 M50 40 L34 86 M50 40 L66 86" stroke="#c9961a" stroke-width="2"/>`,
+  'ghostrider:0':`${ip('M14 60 Q30 20 46 46 Q50 22 62 40 Q72 14 86 58 Z', '#ff8f00')}${ip('M24 58 Q36 34 46 52 Q52 34 60 48 Q70 30 78 58 Z', '#ffd23f')}<circle cx="26" cy="70" r="17" fill="#151515"${sk}/><circle cx="76" cy="70" r="17" fill="#151515"${sk}/><circle cx="26" cy="70" r="6" fill="#ff8f00"/><circle cx="76" cy="70" r="6" fill="#ff8f00"/><path d="M26 70 L50 56 L76 70 M44 56 L60 56" stroke="#9e9e9e" stroke-width="5"/>`,
+  'ghostrider:1':`${ip('M10 80 Q20 50 30 64 Q34 40 46 58 Q52 32 62 54 Q72 36 80 60 Q88 46 92 76 Z', '#ff8f00')}` + [[18, 78], [30, 70], [42, 64], [54, 62], [66, 64], [78, 70], [90, 78]].map(([x, y], i) => `<ellipse cx="${x}" cy="${y}" rx="7" ry="4.5" transform="rotate(${i % 2 ? 0 : 90} ${x} ${y})" fill="none" stroke="${INK}" stroke-width="6"/><ellipse cx="${x}" cy="${y}" rx="7" ry="4.5" transform="rotate(${i % 2 ? 0 : 90} ${x} ${y})" fill="none" stroke="#bdbdbd" stroke-width="3"/>`).join(''),
+  'daredevil:0':`<g transform="rotate(-35 50 50)"><rect x="44" y="6" width="12" height="84" rx="6" fill="#c62828"${sk}/><rect x="44" y="60" width="12" height="22" fill="#7f1010"${sk}/><path d="M50 90 Q40 98 50 100" fill="none" stroke="${INK}" stroke-width="2.5"/></g>`,
+  'silversurfer:0':`<g transform="rotate(-30 50 50)"><ellipse cx="50" cy="50" rx="18" ry="46" fill="#cfd8dc"${sk}/><path d="M50 8 L50 92" stroke="#90a4ae" stroke-width="3"/><path d="M40 24 Q38 50 42 76" fill="none" stroke="#fff" stroke-width="3"/></g>`,
+  'goblin:0':`<path d="M50 20 Q52 10 60 8" fill="none" stroke="#3e7d3a" stroke-width="5"/>${ip('M50 20 Q86 18 88 54 Q86 90 50 90 Q14 90 12 54 Q14 18 50 20 Z', '#ff8f00')}<path d="M34 24 Q26 54 34 86 M66 24 Q74 54 66 86" fill="none" stroke="#d96f00" stroke-width="3"/>${ip('M28 46 L40 40 L40 52 Z', '#151515')}${ip('M72 46 L60 40 L60 52 Z', '#151515')}${ip('M30 64 L38 70 L46 64 L54 70 L62 64 L70 70 L66 76 L34 76 Z', '#151515')}`,
+  'goblin:1':`${ip('M6 52 Q24 30 42 46 L50 36 L58 46 Q76 30 94 52 Q80 54 76 66 Q66 58 58 64 L50 76 L42 64 Q34 58 24 66 Q20 54 6 52 Z', '#2e7d32')}<path d="M44 50 L50 44 L56 50" fill="none" stroke="#ffd23f" stroke-width="3"/>`,
+  'redskull:0':`<circle cx="50" cy="52" r="42" fill="#4fc3f7" opacity=".25"/>${ip('M50 14 L84 32 L50 50 L16 32 Z', '#bdf0ff')}${ip('M16 32 L50 50 L50 90 L16 72 Z', '#3d9be9')}${ip('M84 32 L50 50 L50 90 L84 72 Z', '#1f6fc7')}`,
+  'doom:0':`${ip('M22 16 Q50 4 78 16 L76 70 Q50 96 24 70 Z', '#9e9e9e')}${ip('M30 40 L46 42 L46 48 L30 46 Z', INK)}${ip('M70 40 L54 42 L54 48 L70 46 Z', INK)}<path d="M50 48 L50 66 M38 72 L62 72" stroke="${INK}" stroke-width="3.5"/>` + [[30, 24], [70, 24], [28, 62], [72, 62]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="2.5" fill="${INK}"/>`).join(''),
+  'superman:0':`<ellipse cx="50" cy="88" rx="38" ry="7" fill="#2e7d32" opacity=".3"/>${ip('M30 88 L22 44 L36 20 L42 54 Z', '#3ddc84')}${ip('M42 88 L44 30 L56 6 L62 40 L58 88 Z', '#5df59a')}${ip('M58 88 L68 36 L80 52 L74 88 Z', '#2fbf6b')}`,
+  'batman:0':`${ip('M6 50 Q22 40 30 32 Q34 44 42 42 L46 30 L50 38 L54 30 L58 42 Q66 44 70 32 Q78 40 94 50 Q80 52 74 64 Q66 56 58 60 Q54 68 50 74 Q46 68 42 60 Q34 56 26 64 Q20 52 6 50 Z', '#3a3a3a')}`,
+  'batman:1':`${ip('M4 40 Q50 52 96 40 L96 60 Q50 72 4 60 Z', '#f2c12e')}` + [16, 30, 70, 84].map(x => `<rect x="${x - 6}" y="${x < 50 ? 44 + x / 8 : 44 + (100 - x) / 8}" width="12" height="16" rx="2" fill="#d9a520"${sk}/>`).join('') + `<ellipse cx="50" cy="56" rx="10" ry="8" fill="#d9a520"${sk}/>`,
+  'ww:0':`<circle cx="50" cy="50" r="40" fill="#ffd23f" opacity=".2"/>` + [34, 26, 18].map(r => `<ellipse cx="50" cy="54" rx="${r}" ry="${r * .6}" fill="none" stroke="${INK}" stroke-width="7"/><ellipse cx="50" cy="54" rx="${r}" ry="${r * .6}" fill="none" stroke="#e6b422" stroke-width="3.5"/>`).join('') + `<path d="M76 46 Q92 30 86 14" fill="none" stroke="${INK}" stroke-width="7"/><path d="M76 46 Q92 30 86 14" fill="none" stroke="#e6b422" stroke-width="3.5"/>`,
+  'ww:1':[24, 60].map(x => `<rect x="${x}" y="22" width="20" height="56" rx="6" fill="#cfd8dc"${sk}/><polygon points="${star5(x + 10, 50, 7, 3)}" fill="#c8102e" stroke="${INK}" stroke-width="1.5"/>`).join(''),
+  'aquaman:0':`<rect x="46" y="40" width="8" height="58" rx="3" fill="#d4af37"${sk}/>${ip('M30 44 L70 44 L70 36 Q70 30 64 34 L64 40 L56 40 L56 18 L50 4 L44 18 L44 40 L36 40 L36 34 Q30 30 30 36 Z', '#d4af37')}${ip('M30 36 L28 14 L36 30 Z', '#d4af37')}${ip('M70 36 L72 14 L64 30 Z', '#d4af37')}`,
+  'gl:0':`<circle cx="50" cy="56" r="40" fill="#8bc34a" opacity=".25"/><ellipse cx="50" cy="62" rx="26" ry="22" fill="none" stroke="${INK}" stroke-width="13"/><ellipse cx="50" cy="62" rx="26" ry="22" fill="none" stroke="#2e7d32" stroke-width="8"/>${ip('M36 22 L64 22 L68 40 L32 40 Z', '#2e7d32')}<rect x="42" y="26" width="16" height="10" rx="2" fill="#b9f6ca"/>`,
+  'cyborg:0':`${ip('M50 10 L86 28 L50 46 L14 28 Z', '#bdbdbd')}${ip('M14 28 L50 46 L50 90 L14 72 Z', '#8a8a8a')}${ip('M86 28 L50 46 L50 90 L86 72 Z', '#6d6d6d')}<path d="M22 42 L34 48 L34 62 L44 66 M76 42 L62 50 L62 70 M50 18 L62 24 L50 30" fill="none" stroke="#4fc3f7" stroke-width="2.5"/>`,
+  'greenarrow:0':arrow(10, 88, 78, 22, '#2e7d32', ip('M66 34 Q60 18 74 12 Q90 6 92 22 Q94 36 80 38 Q70 40 66 34 Z', '#d32f2f')),
+  'lex:0':`${ip('M18 70 Q14 18 50 14 Q86 18 82 70 L68 86 L32 86 Z', '#2e7d32')}${ip('M28 44 L72 44 L68 58 L32 58 Z', '#ffd23f')}<path d="M50 14 L50 44 M18 70 L32 66 M82 70 L68 66" stroke="#5b2a86" stroke-width="5"/>`,
+  'darkseid:0':`${ip('M22 10 L78 10 L84 90 L16 90 Z', '#3e2c23')}<g fill="#ff5a3c" font-family="serif" font-size="13" font-weight="700"><text x="30" y="34">∀Ω</text><text x="52" y="52">Ψ∞</text><text x="26" y="68">≠∂</text><text x="54" y="82">Σ</text></g><circle cx="50" cy="50" r="36" fill="#ff3b3b" opacity=".12"/>`,
+  'catwoman:0':`<rect x="64" y="66" width="12" height="28" rx="4" fill="#3a3a3a"${sk}/><path d="M70 66 Q74 40 50 40 Q24 40 26 56 Q28 70 48 66 Q62 62 56 52 Q50 46 40 54 Q34 22 72 22 Q92 24 88 52" fill="none" stroke="${INK}" stroke-width="6"/><path d="M70 66 Q74 40 50 40 Q24 40 26 56 Q28 70 48 66 Q62 62 56 52 Q50 46 40 54 Q34 22 72 22 Q92 24 88 52" fill="none" stroke="#5d4037" stroke-width="3"/>`,
+  'deathstroke:0':`${ip('M50 8 Q84 8 84 46 Q84 86 50 94 Z', '#151515')}${ip('M50 8 Q16 8 16 46 Q16 86 50 94 Z', '#ff8f00')}${ip('M56 42 L76 40 L74 48 L56 48 Z', '#fff')}<path d="M24 44 L44 44" stroke="${INK}" stroke-width="4"/>`,
+  'atom:0':`<circle cx="50" cy="50" r="40" fill="#e3f2fd" opacity=".3"/><g fill="none" stroke="#c8102e" stroke-width="3"><ellipse cx="50" cy="50" rx="40" ry="14"/><ellipse cx="50" cy="50" rx="40" ry="14" transform="rotate(60 50 50)"/><ellipse cx="50" cy="50" rx="40" ry="14" transform="rotate(-60 50 50)"/></g><polygon points="${star5(50, 50, 16, 7)}" fill="#fff" stroke="${INK}" stroke-width="2.5"/>`,
+  'bluebeetle:0':`<path d="M30 34 L14 22 M30 52 L10 52 M32 68 L16 82 M70 34 L86 22 M70 52 L90 52 M68 68 L84 82" stroke="${INK}" stroke-width="4"/>${ip('M50 12 Q70 14 72 30 L72 70 Q70 90 50 92 Q30 90 28 70 L28 30 Q30 14 50 12 Z', '#1e4fa3')}<path d="M50 30 L50 92 M28 32 Q50 40 72 32" stroke="${INK}" stroke-width="3" fill="none"/><path d="M36 50 Q42 46 46 52 M54 52 Q58 46 64 50" stroke="#7fd3ff" stroke-width="3" fill="none"/>`,
+  'robin:0':`<g transform="rotate(40 50 50)"><rect x="45" y="4" width="10" height="92" rx="4" fill="#5d5d5d"${sk}/><rect x="45" y="40" width="10" height="20" fill="#c8102e"${sk}/><path d="M45 20 L55 20 M45 80 L55 80" stroke="${INK}" stroke-width="2.5"/></g>`,
+  'joker:0':`<g transform="rotate(-10 50 50)">${ip('M24 8 L76 8 Q80 8 80 12 L80 88 Q80 92 76 92 L24 92 Q20 92 20 88 L20 12 Q20 8 24 8 Z', '#fff')}<rect x="25" y="13" width="50" height="74" rx="2" fill="none" stroke="#c62828" stroke-width="2"/><text x="31" y="30" font-size="14" font-weight="900" fill="#6a1b9a" font-family="serif">J</text>${ip('M36 66 Q34 46 42 40 L50 52 L58 40 Q66 46 64 66 Z', '#6a1b9a')}<path d="M42 40 L36 34 M58 40 L64 34 M50 52 L50 42" stroke="#2e7d32" stroke-width="3"/><circle cx="36" cy="33" r="3" fill="#2e7d32"/><circle cx="64" cy="33" r="3" fill="#2e7d32"/></g>`,
+  'joker:1':`<path d="M50 54 L50 96" stroke="#2e7d32" stroke-width="5"/>` + Array.from({length:8}, (_, i) => `<ellipse cx="50" cy="26" rx="8" ry="16" transform="rotate(${i * 45} 50 40)" fill="#fff"${sk}/>`).join('') + `<circle cx="50" cy="40" r="9" fill="#ffd23f"${sk}/><path d="M64 42 q8 -2 10 4 M70 34 q8 0 12 -6" stroke="#4fc3f7" stroke-width="3" fill="none"/>`,
+  'harley:0':`<g transform="rotate(-25 50 50)"><rect x="46" y="44" width="8" height="52" rx="3" fill="#8d6e63"${sk}/>${ip('M16 14 L50 14 L50 50 L16 50 Q10 32 16 14 Z', '#c8102e')}${ip('M50 14 L84 14 Q90 32 84 50 L50 50 Z', '#151515')}</g>`,
+  'harley:1':`<g transform="rotate(35 50 50)">${ip('M44 92 L42 54 Q40 10 50 6 Q60 10 58 54 L56 92 Z', '#c99a5b')}<rect x="42" y="74" width="16" height="16" fill="#c8102e" opacity=".9"/><ellipse cx="50" cy="94" rx="9" ry="4" fill="#8d6e63"${sk}/></g>`,
+  'bane:0':`${ip('M38 12 H62 V22 H58 V80 Q58 92 50 92 Q42 92 42 80 V22 H38 Z', '#e8f5e9')}<path d="M43 42 H57 V80 Q57 90 50 90 Q43 90 43 80 Z" fill="#43a047"/><path d="M58 30 Q84 30 84 60 Q84 86 66 88" fill="none" stroke="${INK}" stroke-width="7"/><path d="M58 30 Q84 30 84 60 Q84 86 66 88" fill="none" stroke="#7cb342" stroke-width="3.5"/>`,
+  'penguin:0':`${ip('M8 52 Q50 0 92 52 Q84 46 78 52 Q71 44 64 52 Q57 44 50 52 Q43 44 36 52 Q29 44 22 52 Q16 46 8 52 Z', '#151515')}<path d="M50 52 L50 88 Q50 96 42 96 Q36 96 36 90" fill="none" stroke="${INK}" stroke-width="7"/><path d="M50 52 L50 88 Q50 96 42 96 Q36 96 36 90" fill="none" stroke="#8d6e63" stroke-width="3.5"/><path d="M50 10 L50 4" stroke="${INK}" stroke-width="4"/>`,
+  'riddler:0':`<rect x="45" y="44" width="10" height="52" rx="3" fill="#2e7d32"${sk}/><path d="M30 30 Q30 8 50 8 Q72 8 70 28 Q68 40 50 44 L50 52" fill="none" stroke="${INK}" stroke-width="13" stroke-linecap="round"/><path d="M30 30 Q30 8 50 8 Q72 8 70 28 Q68 40 50 44 L50 52" fill="none" stroke="#d4af37" stroke-width="7" stroke-linecap="round"/>`,
+};
+const itemArt = (id, k) => ITEM_ART[`${id}:${k}`] ? `<svg viewBox="0 0 100 100" class="art" aria-hidden="true">${ITEM_ART[`${id}:${k}`]}</svg>` : '';
+
+// ------------------------------------------------------------------ skills
+const KIND = {
+  side:{label:'阵营', title:'TA 来自哪家？'},
+  real:{label:'真实身份', title:'这个真名属于谁？'},
+  item:{label:'道具', title:'这件道具属于谁？'},
+  power:{label:'能力', title:'谁拥有这种能力？'},
+  color:{label:'配色', title:'这套战衣配色是谁的？'},
+  foe:{label:'宿敌', title:'TA 是谁的头号宿敌？'},
+  team:{label:'团队', title:'TA 属于哪个团队？'},
+  home:{label:'地盘', title:'TA 的家乡或大本营在哪？'},
+  villain:{label:'反派', title:'这是哪个反派？'},
+  duel:{label:'撞衫对决', title:'这条线索说的是谁？'},
+  clue:{label:'线索追踪', title:'根据线索认出 TA'},
+  face:{label:'头像', title:'这是谁？'},
+  shadow:{label:'剪影', title:'剪影里是谁？'},
+};
+const SKILLS = [
+  {id:'side1',name:'阵营辨认',kind:'side',lo:1,hi:1,req:[],desc:'看名字判断是漫威还是 DC。'},
+  {id:'item1',name:'标志道具',kind:'item',lo:1,hi:1,req:[],desc:'锤子、盾牌、套索……认出主人。'},
+  {id:'face1',name:'看脸认人',kind:'face',lo:1,hi:1,req:[],desc:'看头像认出英雄和反派。'},
+  {id:'real1',name:'真实身份',kind:'real',lo:1,hi:2,req:['side1'],desc:'面具下面是谁？'},
+  {id:'power1',name:'超能力',kind:'power',lo:1,hi:1,req:['item1'],desc:'根据能力描述认人。'},
+  {id:'face2',name:'看脸·进阶',kind:'face',lo:2,hi:3,req:['face1'],desc:'二三线角色的头像。'},
+  {id:'foe1',name:'宿敌',kind:'foe',lo:1,hi:2,req:['real1'],desc:'知道死对头，就知道主角。'},
+  {id:'team1',name:'团队归属',kind:'team',lo:1,hi:3,req:['real1'],desc:'复仇者、正义联盟还是 X 战警？'},
+  {id:'color1',name:'配色识别',kind:'color',lo:1,hi:2,req:['power1'],desc:'只看战衣配色认人。'},
+  {id:'side2',name:'阵营·冷门',kind:'side',lo:2,hi:3,req:['side1','real1'],desc:'二三线角色也能分清阵营吗？'},
+  {id:'home1',name:'家乡与基地',kind:'home',lo:1,hi:3,req:['team1'],desc:'哥谭、瓦坎达、天堂岛……'},
+  {id:'villain',name:'反派档案',kind:'villain',lo:1,hi:3,req:['foe1'],desc:'根据特征认出反派。'},
+  {id:'power2',name:'能力·进阶',kind:'power',lo:2,hi:3,req:['power1','color1'],desc:'冷门角色的能力。'},
+  {id:'item2',name:'道具·进阶',kind:'item',lo:2,hi:3,req:['item1','color1'],desc:'更冷门的武器与神器。'},
+  {id:'shadow',name:'剪影挑战',kind:'shadow',lo:1,hi:3,req:['face2','color1','item2'],desc:'只剩一团黑影，靠头盔、耳朵和发型认人。'},
+  {id:'duel',name:'撞衫对决',kind:'duel',lo:1,hi:3,req:['power2','side2'],desc:'快银还是闪电侠？死侍还是丧钟？'},
+  {id:'clue',name:'线索追踪',kind:'clue',lo:1,hi:3,req:['duel','home1','villain'],desc:'线索一条条揭开，越早认出越厉害。'},
+];
+const SK = Object.fromEntries(SKILLS.map(s => [s.id, s]));
+const depthMemo = {};
+const depthOf = id => depthMemo[id] ??= (SK[id].req.length ? 1 + Math.max(...SK[id].req.map(depthOf)) : 0);
+const TOPO = SKILLS.slice().sort((a, b) => depthOf(a.id) - depthOf(b.id)).map(s => s.id);
+
+// ------------------------------------------------------------------ utils
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const rnd = Math.random;
+const pick = (a, r = rnd) => a[Math.floor(r() * a.length)];
+function shuffle(a, r = rnd) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function seeded(str) {
+  let h = 2166136261; for (const ch of str) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); }
+  let s = h >>> 0;
+  return () => { s |= 0; s = (s + 0x6d2b79f5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
+const dayKey = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+const dayNum = k => { const [y, m, d] = k.split('-').map(Number); return Math.round(Date.UTC(y, m - 1, d) / 864e5); };
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const fmtTime = ms => { const s = Math.max(0, Math.round(ms / 1000)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
+function fmtEnergy(L) {
+  const v = Math.pow(10, L);
+  if (v < 1e4) return String(Math.round(v));
+  const [div, unit] = v < 1e8 ? [1e4, '万'] : [1e8, '亿'];
+  const x = v / div;
+  return (x < 10 ? (Math.floor(x * 10) / 10).toFixed(1) : String(Math.floor(x))) + unit;
+}
+const median = a => { if (!a.length) return Infinity; const s = a.slice().sort((x, y) => x - y); const m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
+function hex2rgb(h) { const n = parseInt(h.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; }
+function paletteDist(a, b) {
+  // average nearest-colour distance, both directions
+  const near = (x, ys) => Math.min(...ys.map(y => { const p = hex2rgb(x), q = hex2rgb(y); return Math.hypot(p[0]-q[0], p[1]-q[1], p[2]-q[2]); }));
+  return (a.reduce((s, x) => s + near(x, b), 0) / a.length + b.reduce((s, x) => s + near(x, a), 0) / b.length) / 2;
+}
+
+// ------------------------------------------------------------------ store
+const KEY = 'hero-radar-v1';
+function freshState() {
+  return {
+    v:1,
+    settings:{count:10, music:true, sfx:true, vol:.7, motion: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'low' : 'mid'},
+    skills:{}, review:[], codex:{}, days:{}, hist:[],
+    stats:{plays:0, solved:0, firstTry:0, maxCombo:0, bestL:0, extras:0, extraBest:0, perfects:0, reviewSolved:0, marvelPlays:0, dcPlays:0},
+    quests:null, questAll:0, trophies:{}, placed:false, recent:[], seenHelp:false,
+  };
+}
+let S;
+function load() {
+  try { const raw = localStorage.getItem(KEY); if (raw) { const d = JSON.parse(raw); const f = freshState(); S = {...f, ...d, settings:{...f.settings, ...d.settings}, stats:{...f.stats, ...d.stats}}; return; } } catch (e) { /* storage unavailable */ }
+  S = freshState();
+}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* ignore */ } }
+
+// ------------------------------------------------------------------ mastery
+const skRec = id => (S.skills[id] ??= {h:[], m:0, st:0, lastOk:0});
+const isMastered = id => !!S.skills[id]?.m;
+const isUnlocked = id => SK[id].req.every(isMastered);
+function noteSkill(id, ok, ms) {
+  const r = skRec(id);
+  r.h.push({ok: ok ? 1 : 0, ms: Math.round(ms)}); if (r.h.length > 20) r.h.shift();
+  if (ok) r.lastOk = Date.now();
+  const last = n => r.h.slice(-n);
+  const okCount = a => a.filter(x => x.ok).length;
+  if (!r.m && r.h.length >= 6 && okCount(last(6)) >= 5) { r.m = Date.now(); r.st = Math.max(r.st, 1); }
+  if (r.m) {
+    if (r.st < 2 && r.h.length >= 12 && okCount(last(12)) >= 11) r.st = 2;
+    if (r.st === 2 && r.h.length >= 10 && okCount(last(10)) >= 9 && median(last(10).filter(x => x.ok).map(x => x.ms)) <= 5000) r.st = 3;
+  }
+}
+const RUST_MS = 14 * 864e5;
+function rustyList() {
+  const now = Date.now();
+  return SKILLS.map(s => s.id).filter(id => isMastered(id) && now - (S.skills[id].lastOk || S.skills[id].m) > RUST_MS)
+    .sort((a, b) => (S.skills[a].lastOk || S.skills[a].m) - (S.skills[b].lastOk || S.skills[b].m)).slice(0, 3);
+}
+function skillStatus(id) {
+  if (!isUnlocked(id)) return 'lock';
+  if (isMastered(id)) return rustyList().includes(id) ? 'rust' : 'master';
+  return (S.skills[id]?.h.length) ? 'learn' : 'new';
+}
+
+// ------------------------------------------------------------------ question generators
+function poolFor(sk, ctx, need) {
+  let p = ENT.filter(e => e.f >= sk.lo && e.f <= sk.hi && (!ctx.uni || e.u === ctx.uni) && need(e));
+  if (p.length < 2) p = ENT.filter(e => (!ctx.uni || e.u === ctx.uni) && need(e));
+  return p;
+}
+function heroOpts(ans, ctx, sk, extraOk = () => true) {
+  const maxF = Math.max(2, sk.hi);
+  const base = e => e.id !== ans.id && !similar(ans.id, e.id) && (!ctx.uni || e.u === ctx.uni) && extraOk(e);
+  let c = ENT.filter(e => base(e) && e.f <= maxF);
+  if (c.length < 3) c = ENT.filter(base);
+  // half the time lean on the same universe, which is harder to tell apart
+  if (!ctx.uni && rnd() < .5) { const same = c.filter(e => e.u === ans.u); if (same.length >= 3) c = same; }
+  const opts = shuffle([ans, ...shuffle(c).slice(0, 3)]).map(e => ({t:e.zh, s:e.en, id:e.id}));
+  return {opts, ans: opts.findIndex(o => o.id === ans.id)};
+}
+const GEN = {
+  side(sk, ctx) {
+    if (ctx.uni) return null;
+    const e = pick(poolFor(sk, ctx, () => true));
+    return {kind:'side', ent:e.id, img:{t:'pt', id:e.id}, main:e.zh, sub:e.en, opts:[{t:'漫威',s:'Marvel',u:'M'},{t:'DC',s:'DC Comics',u:'D'}], ans: e.u === 'M' ? 0 : 1, sig:'side:'+e.id};
+  },
+  real(sk, ctx) {
+    const e = pick(poolFor(sk, ctx, e => e.real));
+    return {kind:'real', ent:e.id, main:e.real, ...heroOpts(e, ctx, sk), sig:'real:'+e.id};
+  },
+  item(sk, ctx) {
+    const e = pick(poolFor(sk, ctx, e => e.it.length));
+    const k = Math.floor(rnd() * e.it.length);
+    const hide = sk.lo >= 2; // advanced round: picture + description only, the name is revealed afterwards
+    return {kind:'item', ent:e.id, img:{t:'item', id:e.id, k}, main: hide ? e.it[k][1] : e.it[k][0], small:hide, sub: hide ? '' : e.it[k][1], note: hide ? e.it[k][0] : '', ...heroOpts(e, ctx, sk), sig:`item:${e.id}:${k}`};
+  },
+  power(sk, ctx) {
+    const e = pick(poolFor(sk, ctx, () => true));
+    return {kind:'power', ent:e.id, main:e.pw[0], small:true, ...heroOpts(e, ctx, sk), sig:'power:'+e.id};
+  },
+  color(sk, ctx) {
+    const e = pick(poolFor(sk, ctx, () => true));
+    return {kind:'color', ent:e.id, sw:e.col, sub:`${UNI[e.u]} · ${e.v ? '反派' : '英雄'}`, ...heroOpts(e, ctx, sk, d => paletteDist(d.col, e.col) > 70), sig:'color:'+e.id};
+  },
+  foe(sk, ctx) {
+    const e = pick(poolFor(sk, ctx, e => e.foe));
+    const fid = BYID[e.foe] ? e.foe : null;
+    const fname = fid ? BYID[fid].zh : e.foe;
+    const ok = d => d.foe !== e.foe && d.id !== fid && !(ALSO_FOE[fid] || []).includes(d.id) && !(ALSO_FOE[d.id] || []).includes(fid || '');
+    return {kind:'foe', ent:e.id, img: fid ? {t:'pt', id:fid} : null, main:fname, sub: fid ? BYID[fid].en : '', ...heroOpts(e, ctx, sk, ok), sig:'foe:'+e.id};
+  },
+  team(sk, ctx) {
+    const e = pick(poolFor(sk, ctx, e => e.team));
+    const bad = new Set([e.team, ...(e.tx || [])]);
+    let others = Object.keys(TEAMS).filter(t => !bad.has(t));
+    const same = others.filter(t => TEAMS[t].u === e.u);
+    if (same.length >= 3 && (ctx.uni || rnd() < .6)) others = same;
+    const opts = shuffle([e.team, ...shuffle(others).slice(0, 3)]).map(t => ({t:TEAMS[t].n, id:t}));
+    return {kind:'team', ent:e.id, img:{t:'pt', id:e.id}, main:e.zh, sub:e.en, opts, ans:opts.findIndex(o => o.id === e.team), sig:'team:'+e.id};
+  },
+  home(sk, ctx) {
+    const e = pick(poolFor(sk, ctx, e => e.home));
+    let places = [...new Set(ENT.filter(d => d.home && d.home !== e.home && (!ctx.uni || d.u === ctx.uni)).map(d => d.home))];
+    const same = [...new Set(ENT.filter(d => d.home && d.home !== e.home && d.u === e.u).map(d => d.home))];
+    if (same.length >= 3 && rnd() < .6) places = same;
+    const opts = shuffle([e.home, ...shuffle(places).slice(0, 3)]).map(p => ({t:p}));
+    return {kind:'home', ent:e.id, img:{t:'pt', id:e.id}, main:e.zh, sub:e.en, opts, ans:opts.findIndex(o => o.t === e.home), sig:'home:'+e.id};
+  },
+  villain(sk, ctx) {
+    const e = pick(poolFor(sk, ctx, e => e.v));
+    const ks = shuffle([0, 1, 2]).slice(0, 2).sort();
+    return {kind:'villain', ent:e.id, main:ks.map(k => e.cl[k]).join('；'), small:true, ...heroOpts(e, ctx, sk, d => d.v), sig:`villain:${e.id}:${ks.join('')}`};
+  },
+  duel(sk, ctx) {
+    if (ctx.uni) return null;
+    const d = pick(DUELS);
+    const sideA = rnd() < .5;
+    const e = BYID[sideA ? d.a : d.b];
+    const k = Math.floor(rnd() * 4);
+    const text = (sideA ? d.ca : d.cb)[k];
+    const opts = [d.a, d.b].map(id => ({t:BYID[id].zh, s:BYID[id].en, id, u:BYID[id].u}));
+    return {kind:'duel', ent:e.id, main:text, small:true, sub:`${BYID[d.a].zh} vs ${BYID[d.b].zh}`, opts, ans: sideA ? 0 : 1, sig:`duel:${e.id}:${k}`};
+  },
+  face(sk, ctx) {
+    const e = pick(poolFor(sk, ctx, e => LOOK[e.id]));
+    return {kind:'face', ent:e.id, img:{t:'pt', id:e.id}, ...heroOpts(e, ctx, sk), sig:'face:'+e.id};
+  },
+  shadow(sk, ctx) {
+    const e = pick(poolFor(sk, ctx, e => LOOK[e.id]?.sh));
+    return {kind:'shadow', ent:e.id, img:{t:'sil', id:e.id}, ...heroOpts(e, ctx, sk), sig:'shadow:'+e.id};
+  },
+  clue(sk, ctx) {
+    const e = pick(poolFor(sk, ctx, () => true));
+    return {kind:'clue', ent:e.id, clues:e.cl.slice(), r:0, ...heroOpts(e, ctx, sk), sig:'clue:'+e.id};
+  },
+};
+function genQ(skillId, ctx) {
+  const sk = SK[skillId];
+  let q = null;
+  for (let i = 0; i < 16; i++) {
+    const c = GEN[sk.kind](sk, ctx);
+    if (!c) return null;
+    q = c;
+    if (!ctx.avoid.has(c.sig)) break;
+  }
+  q.skill = skillId;
+  return q;
+}
+
+// ------------------------------------------------------------------ audio (all synthesized)
+const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
+const CHORDS = [{root:38, t:[62,65,69]}, {root:34, t:[58,62,65]}, {root:41, t:[60,65,69]}, {root:36, t:[60,64,67]}];
+const LEAD = [
+  [74,0,0,74,77,0,79,0,81,0,0,79,77,0,74,0],
+  [74,0,0,74,77,0,79,0,77,0,74,0,72,0,0,0],
+  [72,0,0,72,74,0,77,0,81,0,0,79,77,0,0,0],
+  [79,0,0,79,77,0,76,0,74,0,0,0,72,0,74,0],
+];
+const PENT = [62,65,67,69,72,74,77,79,81,84,86,89,91,93];
+const AU = {
+  ctx:null, on:false, step:0, next:0, stage:0, beats:[], timer:null,
+  init() {
+    if (this.ctx) return;
+    const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
+    const ctx = this.ctx = new C();
+    const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 4;
+    this.master = ctx.createGain(); this.master.connect(comp); comp.connect(ctx.destination);
+    this.mus = ctx.createGain(); this.mus.gain.value = .5; this.mus.connect(this.master);
+    this.sfx = ctx.createGain(); this.sfx.gain.value = .8; this.sfx.connect(this.master);
+    const len = ctx.sampleRate; this.noise = ctx.createBuffer(1, len, ctx.sampleRate);
+    const d = this.noise.getChannelData(0); for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    this.applyVol();
+  },
+  applyVol() { if (this.ctx) this.master.gain.value = S.settings.vol; },
+  resume() { if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume(); },
+  get bpm() { return 108 + this.stage * 4; },
+  start() {
+    this.init(); if (!this.ctx || this.on) return;
+    this.on = true; this.step = 0; this.next = this.ctx.currentTime + .08;
+    this.mus.gain.cancelScheduledValues(this.ctx.currentTime); this.mus.gain.setValueAtTime(.5, this.ctx.currentTime);
+    this.timer = setInterval(() => this.sched(), 25);
+  },
+  stop() {
+    if (!this.on) return; this.on = false; clearInterval(this.timer);
+    const t = this.ctx.currentTime; this.mus.gain.setTargetAtTime(0, t, .25); setTimeout(() => { if (!this.on) this.mus.gain.setValueAtTime(.5, this.ctx.currentTime); }, 1200);
+  },
+  sched() {
+    const c = this.ctx;
+    while (this.next < c.currentTime + .12) {
+      this.playStep(this.step, this.next);
+      this.next += 60 / this.bpm / 4;
+      this.step = (this.step + 1) % 64;
+    }
+  },
+  env(t, a, d, peak, dest) { const g = this.ctx.createGain(); g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(.0001, t + a + d); g.connect(dest); return g; },
+  osc(type, f, t, dur, peak, dest, {a = .005, cut = 0, q = 1, detune = 0} = {}) {
+    const o = this.ctx.createOscillator(); o.type = type; o.frequency.setValueAtTime(f, t); o.detune.value = detune;
+    const g = this.env(t, a, dur, peak, dest);
+    if (cut) { const fl = this.ctx.createBiquadFilter(); fl.type = 'lowpass'; fl.frequency.value = cut; fl.Q.value = q; o.connect(fl); fl.connect(g); } else o.connect(g);
+    o.start(t); o.stop(t + a + dur + .05); return o;
+  },
+  noiseHit(t, dur, peak, dest, type, f, q = 1) {
+    const n = this.ctx.createBufferSource(); n.buffer = this.noise;
+    const fl = this.ctx.createBiquadFilter(); fl.type = type; fl.frequency.value = f; fl.Q.value = q;
+    n.connect(fl); fl.connect(this.env(t, .002, dur, peak, dest)); n.start(t, Math.random() * .5); n.stop(t + dur + .05);
+  },
+  kick(t, p = .9) { const o = this.ctx.createOscillator(); o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(42, t + .12); o.connect(this.env(t, .002, .28, p, this.mus)); o.start(t); o.stop(t + .35); },
+  playStep(s, t) {
+    if (s % 4 === 0) { this.beats.push(t); if (this.beats.length > 8) this.beats.shift(); }
+    if (!S.settings.music) return;
+    const st = this.stage, b = s & 15, bar = (s >> 4) & 3, ch = CHORDS[bar], spb = 60 / this.bpm;
+    if (b === 0) ch.t.forEach((m, i) => { this.osc('sawtooth', mtof(m), t, spb * 4, .035, this.mus, {a:.25, cut:900 + st * 180, detune:i * 4 - 4}); this.osc('triangle', mtof(m - 12), t, spb * 4, .04, this.mus, {a:.2}); });
+    if (st >= 1 && b % 4 === 0) this.kick(t);
+    if (st >= 6 && b === 10) this.kick(t, .6);
+    if (st >= 2 && (b % 2 === 0 || st >= 8)) this.noiseHit(t, b % 4 === 2 ? .06 : .03, b % 4 === 2 ? .16 : .08, this.mus, 'highpass', 8000);
+    if (st >= 3 && b % 2 === 0) { const oct = st >= 5 && b % 4 === 2 ? 12 : 0; this.osc('square', mtof(ch.root + oct), t, spb * .45, .07, this.mus, {cut:520 + st * 60}); }
+    if (st >= 4 && (b === 4 || b === 12)) { this.noiseHit(t, .16, .35, this.mus, 'bandpass', 1800, .8); this.osc('triangle', 190, t, .08, .2, this.mus); }
+    if (st >= 4 && (b === 0 || b === 6)) ch.t.forEach(m => this.osc('sawtooth', mtof(m), t, .16, .045, this.mus, {cut:2400}));
+    if (st >= 5) { const tones = [...ch.t, ...ch.t.map(m => m + 12)]; const seq = [0,1,2,3,4,5,4,3]; this.osc('square', mtof(tones[seq[b % 8]]), t, spb * .22, .028, this.mus, {cut:3200}); }
+    if (st >= 6 && LEAD[bar][b]) this.osc('sawtooth', mtof(LEAD[bar][b] + (st >= 8 ? 12 : 0)), t, spb * .9, .05, this.mus, {a:.01, cut:2600});
+    if (st >= 7 && s % 32 === 0) this.noiseHit(t, 1.1, .22, this.mus, 'highpass', 5000);
+    if (st >= 7 && bar === 3 && b >= 12) this.osc('sine', [220, 180, 150, 120][b - 12], t, .14, .35, this.mus);
+  },
+  beatPhase() {
+    if (!this.ctx || !this.on) return (performance.now() / 1000 * 108 / 60) % 1;
+    const now = this.ctx.currentTime; let last = null;
+    for (const b of this.beats) if (b <= now) last = b;
+    return last == null ? 0 : clamp((now - last) / (60 / this.bpm), 0, 1);
+  },
+  sfxOn() { return this.ctx && S.settings.sfx; },
+  correct(combo) {
+    if (!this.sfxOn()) return; const t = this.ctx.currentTime;
+    const i = clamp(combo - 1, 0, PENT.length - 3);
+    this.osc('triangle', mtof(PENT[i]), t, .18, .3, this.sfx); this.osc('sine', mtof(PENT[i] + 12), t, .3, .12, this.sfx);
+    this.osc('triangle', mtof(PENT[i + 2]), t + .07, .32, .3, this.sfx); this.osc('sine', mtof(PENT[i + 2] + 24), t + .07, .5, .06, this.sfx);
+  },
+  wrong() {
+    if (!this.ctx) return; const t = this.ctx.currentTime;
+    this.mus.gain.cancelScheduledValues(t); this.mus.gain.setValueAtTime(this.mus.gain.value, t); this.mus.gain.linearRampToValueAtTime(.2, t + .05); this.mus.gain.linearRampToValueAtTime(.5, t + .7);
+    if (!S.settings.sfx) return;
+    const o = this.ctx.createOscillator(); o.type = 'sine'; o.frequency.setValueAtTime(330, t); o.frequency.exponentialRampToValueAtTime(150, t + .25);
+    o.connect(this.env(t, .01, .3, .32, this.sfx)); o.start(t); o.stop(t + .4);
+  },
+  tick() { if (this.sfxOn()) this.osc('square', 1400, this.ctx.currentTime, .025, .05, this.sfx); },
+  milestone() {
+    if (!this.sfxOn()) return; const t = this.ctx.currentTime;
+    [62, 69, 74, 81, 86].forEach((m, i) => this.osc('sawtooth', mtof(m), t + i * .06, .5, .06, this.sfx, {cut:3000}));
+    this.noiseHit(t + .3, 1.2, .25, this.sfx, 'highpass', 4000);
+  },
+  fanfare() {
+    if (!this.sfxOn()) return; const t = this.ctx.currentTime;
+    [[62,0],[66,.12],[69,.24],[74,.36],[74,.6]].forEach(([m, d]) => { this.osc('sawtooth', mtof(m), t + d, d === .6 ? .8 : .14, .07, this.sfx, {cut:2600}); this.osc('triangle', mtof(m - 12), t + d, .2, .12, this.sfx); });
+  },
+  alarm() { if (!this.sfxOn()) return; const t = this.ctx.currentTime; [0, .18].forEach(d => this.osc('square', 1046, t + d, .1, .08, this.sfx, {cut:4000})); },
+};
+
+// ------------------------------------------------------------------ background fx
+const FX = {
+  stage:0, parts:[], conf:[], stars:[], bolt:null, flash:0, rings:[],
+  init() {
+    this.c = $('#fx'); this.g = this.c.getContext('2d');
+    addEventListener('resize', () => this.resize()); this.resize();
+    for (let i = 0; i < 90; i++) this.stars.push({x:rnd(), y:rnd(), r:rnd() * 1.6 + .4, p:rnd() * 6.28, v:rnd() * .02 + .005});
+    requestAnimationFrame(t => this.frame(t));
+  },
+  resize() { this.dpr = Math.min(2, devicePixelRatio || 1); this.w = innerWidth; this.h = innerHeight; this.c.width = this.w * this.dpr; this.c.height = this.h * this.dpr; },
+  get k() { return {low:.3, mid:.7, high:1}[S.settings.motion] ?? .7; },
+  burst(x, y, n, colors) {
+    n = Math.round(n * this.k);
+    for (let i = 0; i < n; i++) { const a = rnd() * 6.28, sp = 2 + rnd() * 7; this.parts.push({x, y, vx:Math.cos(a) * sp, vy:Math.sin(a) * sp - 2, life:1, r:2 + rnd() * 4, c:pick(colors), sq:rnd() < .5}); }
+  },
+  ring(x, y) { this.rings.push({x, y, r:10, life:1}); },
+  strike() { if (S.settings.motion === 'low') return; const x = this.w * (.15 + rnd() * .7); const pts = [[x, 0]]; let cx = x, cy = 0; while (cy < this.h * .7) { cy += 20 + rnd() * 40; cx += (rnd() - .5) * 70; pts.push([cx, cy]); } this.bolt = {pts, life:1}; this.flash = .35; },
+  frame(t) {
+    const g = this.g, w = this.w, h = this.h, st = this.stage, k = this.k;
+    g.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+    const beat = AU.beatPhase(), pulse = Math.exp(-beat * 4);
+    // ground
+    const hue = st >= 5 ? (t / 60) % 360 : 250;
+    const grd = g.createRadialGradient(w / 2, h * .42, 10, w / 2, h * .42, Math.max(w, h) * .8);
+    if (st >= 5) { grd.addColorStop(0, `hsl(${hue},45%,${17 + pulse * 5 * k}%)`); grd.addColorStop(1, `hsl(${(hue + 40) % 360},40%,7%)`); }
+    else { grd.addColorStop(0, st >= 2 ? '#262050' : '#1c1838'); grd.addColorStop(1, '#0f0c21'); }
+    g.fillStyle = grd; g.fillRect(0, 0, w, h);
+    // stars
+    if (st >= 1) for (const s of this.stars) { s.y += s.v * .05 * (1 + st * .3); if (s.y > 1) s.y = 0; const a = .35 + .35 * Math.sin(t / 600 + s.p); g.fillStyle = `rgba(247,241,227,${a})`; g.beginPath(); g.arc(s.x * w, s.y * h, s.r, 0, 6.28); g.fill(); }
+    // halftone
+    if (st >= 2) {
+      const gap = 22, cx = w / 2, cy = h / 2, maxd = Math.hypot(cx, cy);
+      g.fillStyle = st >= 5 ? `hsla(${(hue + 180) % 360},90%,60%,.16)` : 'rgba(255,210,63,.11)';
+      for (let y = gap / 2; y < h; y += gap) for (let x = (y / gap % 2 ? gap / 2 : 0); x < w; x += gap) {
+        const d = Math.hypot(x - cx, y - cy) / maxd; const r = d * (3.6 + 2.2 * pulse * k);
+        if (r > .5) { g.beginPath(); g.arc(x, y, r, 0, 6.28); g.fill(); }
+      }
+    }
+    // speed lines
+    if (st >= 3) {
+      const n = 44, cx = w / 2, cy = h * .45, R = Math.hypot(w, h);
+      g.save(); g.translate(cx, cy); g.rotate(t / 9000);
+      for (let i = 0; i < n; i++) { const a = i / n * 6.28; g.fillStyle = i % 2 ? `rgba(239,61,61,${.05 + .07 * pulse * k})` : `rgba(61,123,255,${.05 + .07 * pulse * k})`; g.beginPath(); g.moveTo(Math.cos(a) * 90, Math.sin(a) * 90); g.lineTo(Math.cos(a - .025) * R, Math.sin(a - .025) * R); g.lineTo(Math.cos(a + .025) * R, Math.sin(a + .025) * R); g.fill(); }
+      g.restore();
+    }
+    // beat rings
+    if (st >= 8 && beat < .05 && !this._rang) { this._rang = true; this.rings.push({x:w / 2, y:h * .45, r:40, life:1, rainbow:true}); } else if (beat > .5) this._rang = false;
+    for (const r of this.rings) { r.r += 6 + (r.rainbow ? 4 : 0); r.life -= .025; g.strokeStyle = r.rainbow ? `hsla(${(t / 4 + r.r) % 360},90%,65%,${r.life})` : `rgba(255,210,63,${r.life})`; g.lineWidth = 4; g.beginPath(); g.arc(r.x, r.y, r.r, 0, 6.28); g.stroke(); }
+    this.rings = this.rings.filter(r => r.life > 0);
+    // lightning
+    if (st >= 6 && rnd() < .004 * k) this.strike();
+    if (this.bolt) { const b = this.bolt; g.strokeStyle = `rgba(255,248,200,${b.life})`; g.lineWidth = 3; g.shadowColor = '#ffd23f'; g.shadowBlur = 18; g.beginPath(); b.pts.forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y)); g.stroke(); g.shadowBlur = 0; b.life -= .06; if (b.life <= 0) this.bolt = null; }
+    if (this.flash > 0) { g.fillStyle = `rgba(255,255,240,${this.flash})`; g.fillRect(0, 0, w, h); this.flash -= .04; }
+    // confetti
+    if (st >= 7 && this.conf.length < 90 * k && rnd() < .5) this.conf.push({x:rnd() * w, y:-10, vy:1.5 + rnd() * 2.5, vx:(rnd() - .5) * 1.2, r:rnd() * 6.28, vr:(rnd() - .5) * .2, c:pick(['#ef3d3d','#3d7bff','#ffd23f','#33d69a','#f7f1e3'])});
+    for (const c of this.conf) { c.x += c.vx; c.y += c.vy; c.r += c.vr; g.save(); g.translate(c.x, c.y); g.rotate(c.r); g.fillStyle = c.c; g.fillRect(-5, -2.5, 10, 5); g.restore(); }
+    this.conf = this.conf.filter(c => c.y < h + 20);
+    // particles
+    for (const p of this.parts) { p.x += p.vx; p.y += p.vy; p.vy += .22; p.life -= .022; g.globalAlpha = Math.max(0, p.life); g.fillStyle = p.c; if (p.sq) g.fillRect(p.x - p.r, p.y - p.r, p.r * 2, p.r * 2); else { g.beginPath(); g.arc(p.x, p.y, p.r, 0, 6.28); g.fill(); } }
+    g.globalAlpha = 1; this.parts = this.parts.filter(p => p.life > 0);
+    requestAnimationFrame(tt => this.frame(tt));
+  },
+};
+
+// ------------------------------------------------------------------ mascot ("哔哔", a radar bot in a split cape)
+function mascotSVG() {
+  return `<svg class="bibi" viewBox="0 0 120 132" aria-hidden="true"><g class="b-all">
+<path d="M34 80 Q60 72 86 80 L104 128 Q60 118 16 128 Z" fill="var(--blue)" stroke="var(--edge)" stroke-width="3" stroke-linejoin="round"/>
+<path d="M34 80 Q47 76 60 75.6 L60 121 Q38 122 16 128 Z" fill="var(--red)"/>
+<path d="M34 80 Q60 72 86 80 L104 128 Q60 118 16 128 Z" fill="none" stroke="var(--edge)" stroke-width="3" stroke-linejoin="round"/>
+<g class="b-ant"><line x1="60" y1="31" x2="60" y2="17" stroke="var(--edge)" stroke-width="4" stroke-linecap="round"/><path d="M43 19 Q60 1 77 19 Z" fill="var(--pop)" stroke="var(--edge)" stroke-width="3" stroke-linejoin="round"/><circle class="b-blip" cx="60" cy="12" r="3.5" fill="var(--ok)"/></g>
+<path class="b-armL" d="M30 76 Q17 82 15 96" fill="none" stroke="var(--edge)" stroke-width="6" stroke-linecap="round"/>
+<path class="b-armR" d="M90 76 Q103 82 105 96" fill="none" stroke="var(--edge)" stroke-width="6" stroke-linecap="round"/>
+<circle cx="60" cy="64" r="34" fill="var(--paper)" stroke="var(--edge)" stroke-width="4"/>
+<rect x="33" y="51" width="54" height="24" rx="12" fill="var(--edge)"/>
+<g class="e-n"><circle cx="48" cy="63" r="5" fill="var(--pop)"/><circle cx="72" cy="63" r="5" fill="var(--pop)"/></g>
+<g class="e-h"><path d="M42 67 Q48 57 54 67 M66 67 Q72 57 78 67" fill="none" stroke="var(--pop)" stroke-width="4" stroke-linecap="round"/></g>
+<g class="e-o"><path d="M43 58 L53 63 L43 69 M77 58 L67 63 L77 69" fill="none" stroke="var(--miss)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+<path class="m-n" d="M52 85 Q60 91 68 85" fill="none" stroke="var(--edge)" stroke-width="3.5" stroke-linecap="round"/>
+<path class="m-h" d="M49 83 Q60 97 71 83 Z" fill="var(--red)" stroke="var(--edge)" stroke-width="3" stroke-linejoin="round"/>
+<path class="m-o" d="M51 88 Q55.5 84 60 88 Q64.5 92 69 88" fill="none" stroke="var(--edge)" stroke-width="3.5" stroke-linecap="round"/>
+<path class="b-sweat" d="M93 42 Q99 51 93 55 Q87 51 93 42 Z" fill="var(--blue)" stroke="var(--edge)" stroke-width="2"/>
+</g></svg>`;
+}
+let mascotTimer = 0;
+function mascot(state, ms = 700) {
+  clearTimeout(mascotTimer);
+  $$('.bibi').forEach(b => { b.classList.remove('cheer', 'oops'); void b.getBoundingClientRect(); if (state) b.classList.add(state); });
+  if (state) mascotTimer = setTimeout(() => $$('.bibi').forEach(b => b.classList.remove('cheer', 'oops')), ms);
+}
+function mascotDance(on) { $$('.bibi').forEach(b => b.classList.toggle('dance', on && S.settings.motion !== 'low')); }
+
+// ------------------------------------------------------------------ ui helpers
+function show(id) { $$('.scr').forEach(s => s.hidden = s.id !== id); $('#app').scrollTop = 0; }
+function toast(msg, sub = '') { const d = document.createElement('div'); d.className = 'toast'; d.innerHTML = esc(msg) + (sub ? `<small>${esc(sub)}</small>` : ''); $('#toasts').append(d); setTimeout(() => d.remove(), 2900); }
+function banner(main, sub = '') { const b = $('#banner'); b.innerHTML = `<div>${esc(main)}${sub ? `<small>${esc(sub)}</small>` : ''}</div>`; setTimeout(() => { if (b.firstChild && b.firstChild.textContent.startsWith(main)) b.innerHTML = ''; }, 1600); }
+function openModal(html, {dismiss = true} = {}) { const m = $('#modal'); $('#sheet').innerHTML = html; m.hidden = false; m.dataset.dismiss = dismiss ? '1' : ''; setTimeout(() => $('#sheet [autofocus]')?.focus(), 30); }
+function closeModal() { $('#modal').hidden = true; $('#sheet').innerHTML = ''; }
+function starburst(n = 14) { const pts = []; for (let i = 0; i < n * 2; i++) { const a = i / (n * 2) * Math.PI * 2, r = i % 2 ? 33 : 49; pts.push(`${(50 + Math.cos(a) * r).toFixed(1)},${(50 + Math.sin(a) * r).toFixed(1)}`); } return pts.join(' '); }
+const WORDS = ['POW!','BAM!','ZAP!','WHAM!','BOOM!','KRAK!','砰！','轰！','咻！','SNAP!'];
+function comicPop(x, y) {
+  const d = document.createElement('div'); d.className = 'pop';
+  d.style.left = clamp(x, 60, innerWidth - 60) + 'px'; d.style.top = clamp(y, 70, innerHeight - 70) + 'px'; d.style.setProperty('--rot', (rnd() * 30 - 15).toFixed(1) + 'deg');
+  d.innerHTML = `<svg viewBox="0 0 100 100"><polygon points="${starburst()}" fill="${pick(['#ffd23f','#f7f1e3','#33d69a','#ff8fa3'])}" stroke="#0b0918" stroke-width="3" stroke-linejoin="round"/></svg><span>${pick(WORDS)}</span>`;
+  $('#pops').append(d); setTimeout(() => d.remove(), 950);
+}
+const uchip = u => `<span class="chip u-${u}">${u === 'M' ? 'MARVEL' : 'DC'}</span>`;
+const stars = n => n ? '★'.repeat(n) + '☆'.repeat(3 - n) : '';
+
+// ------------------------------------------------------------------ streak, quests, trophies
+function streak() {
+  const days = Object.keys(S.days).map(dayNum).sort((a, b) => b - a);
+  if (!days.length) return 0;
+  const today = dayNum(dayKey());
+  if (days[0] < today - 1) return 0;
+  let n = 1; for (let i = 1; i < days.length; i++) { if (days[i] === days[i - 1] - 1) n++; else break; }
+  return n;
+}
+const QUESTS = [
+  {id:'play1', easy:1, name:'完成 1 局', target:1, ev:'play'},
+  {id:'first8', easy:1, name:'首答正确 8 题', target:8, ev:'first'},
+  {id:'codex2', easy:1, name:'解锁 2 位新图鉴角色', target:2, ev:'codex', cond:() => Object.keys(S.codex).length < ENT.length - 1},
+  {id:'review1', easy:1, name:'在复习中答对 1 题', target:1, ev:'review', cond:() => S.review.length > 0},
+  {id:'combo12', easy:0, name:'打出 12 连击', target:12, ev:'combo', max:true},
+  {id:'extra1', easy:0, name:'进入一次加时赛', target:1, ev:'extra'},
+  {id:'learn6', easy:0, name:'在未掌握的技能上答对 6 题', target:6, ev:'learn', cond:() => SKILLS.some(s => isUnlocked(s.id) && !isMastered(s.id))},
+  {id:'duel3', easy:0, name:'撞衫对决答对 3 题', target:3, ev:'duel', cond:() => isUnlocked('duel')},
+  {id:'play2', easy:0, name:'完成 2 局', target:2, ev:'play'},
+];
+const QBY = Object.fromEntries(QUESTS.map(q => [q.id, q]));
+function ensureQuests() {
+  const day = dayKey();
+  if (S.quests?.day === day) return;
+  const r = seeded('q' + day);
+  const ok = q => !q.cond || q.cond();
+  const easy = shuffle(QUESTS.filter(q => q.easy && ok(q)), r).slice(0, 2);
+  const hard = shuffle(QUESTS.filter(q => !q.easy && ok(q) && !easy.some(e => e.ev === q.ev)), r)[0];
+  S.quests = {day, list:[...easy, hard].filter(Boolean).map(q => ({id:q.id, p:0, done:false})), all:false};
+  save();
+}
+function questEv(ev, n = 1) {
+  ensureQuests();
+  for (const it of S.quests.list) {
+    const q = QBY[it.id]; if (it.done || q.ev !== ev) continue;
+    it.p = q.max ? Math.max(it.p, n) : it.p + n;
+    if (it.p >= q.target) { it.p = q.target; it.done = true; toast('任务完成', q.name); AU.tick(); }
+  }
+  if (!S.quests.all && S.quests.list.length && S.quests.list.every(i => i.done)) { S.quests.all = true; S.questAll++; setTimeout(() => toast('今日任务全部完成！', '明天还有新任务'), 900); }
+}
+const masteredN = () => SKILLS.filter(s => isMastered(s.id)).length;
+const codexN = () => Object.keys(S.codex).length;
+const TROPHIES = [
+  {id:'play1', n:'初出茅庐', d:'完成第 1 局', v:() => S.stats.plays, t:1},
+  {id:'play10', n:'常驻英雄', d:'完成 10 局', v:() => S.stats.plays, t:10},
+  {id:'play50', n:'资深粉丝', d:'完成 50 局', v:() => S.stats.plays, t:50},
+  {id:'combo10', n:'十连击', d:'一局里连续答对 10 题', v:() => S.stats.maxCombo, t:10},
+  {id:'combo30', n:'三十连击', d:'连续答对 30 题', v:() => S.stats.maxCombo, t:30},
+  {id:'combo60', n:'无限连击', d:'连续答对 60 题', v:() => S.stats.maxCombo, t:60},
+  {id:'en4', n:'能量破万', d:'一局能量达到 1 万', v:() => S.stats.bestL, t:4, f:x => fmtEnergy(x)},
+  {id:'en6', n:'能量破百万', d:'一局能量达到 100 万', v:() => S.stats.bestL, t:6, f:x => fmtEnergy(x)},
+  {id:'en8', n:'能量破亿', d:'一局能量达到 1 亿', v:() => S.stats.bestL, t:8, f:x => fmtEnergy(x)},
+  {id:'cx10', n:'图鉴入门', d:'收集 10 位角色', v:codexN, t:10},
+  {id:'cx40', n:'图鉴达人', d:'收集 40 位角色', v:codexN, t:40},
+  {id:'cxall', n:'全图鉴', d:`收集全部 ${ENT.length} 位角色`, v:codexN, t:ENT.length},
+  {id:'m1', n:'第一项技能', d:'掌握 1 项技能', v:masteredN, t:1},
+  {id:'m7', n:'半棵技能树', d:'掌握 7 项技能', v:masteredN, t:7},
+  {id:'mall', n:'技能树满点', d:`掌握全部 ${SKILLS.length} 项技能`, v:masteredN, t:SKILLS.length},
+  {id:'star3', n:'三星技能', d:'任意一项技能达到 ★★★', v:() => Math.max(0, ...SKILLS.map(s => S.skills[s.id]?.st || 0)), t:3},
+  {id:'ex1', n:'加时赛', d:'进入一次加时赛', v:() => S.stats.extras, t:1},
+  {id:'ex15', n:'加时狂人', d:'一次加时赛答对 15 题', v:() => S.stats.extraBest, t:15},
+  {id:'perfect', n:'完美一局', d:'一局全部首答正确', v:() => S.stats.perfects, t:1},
+  {id:'rev10', n:'知错能改', d:'在复习中答对 10 题', v:() => S.stats.reviewSolved, t:10},
+  {id:'str3', n:'三天打卡', d:'连续 3 天游玩', v:streak, t:3},
+  {id:'str7', n:'一周不断', d:'连续 7 天游玩', v:streak, t:7},
+  {id:'both', n:'双宇宙', d:'漫威专场和 DC 专场各完成一局', v:() => (S.stats.marvelPlays > 0) + (S.stats.dcPlays > 0), t:2},
+  {id:'quest7', n:'任务达人', d:'7 天完成全部每日任务', v:() => S.questAll, t:7},
+];
+function checkTrophies() {
+  const got = [];
+  for (const t of TROPHIES) if (!S.trophies[t.id] && t.v() >= t.t) { S.trophies[t.id] = Date.now(); got.push(t); }
+  if (got.length) { save(); got.slice(0, 4).forEach((t, i) => setTimeout(() => toast('获得成就：' + t.n, t.d), 400 + i * 700)); }
+  return got;
+}
+
+// ------------------------------------------------------------------ session
+let P = null; // the current play
+const N_EXTRA_MS = 60000;
+const STAGE_L = [0, .25, .6, 1.0, 1.5, 2.1, 2.8, 3.8, 5.0];
+const stageOf = L => { let s = 0; STAGE_L.forEach((v, i) => { if (L >= v) s = i; }); return s; };
+const Bc = f => 2.3 * Math.pow(clamp(f, 0, 1), 1.15);
+const Xc = n => 2.3 + 3 * (1 - Math.exp(-n / 10));
+const mult = c => 1 + Math.min(1, Math.max(0, c) / 20);
+const COMBO_MS = 9000;
+
+function planQueue(mode, opt) {
+  const N = S.settings.count;
+  if (mode === 'review') return S.review.slice(-Math.min(N, 10)).map(q => ({review:q}));
+  if (mode === 'placement') return TOPO.map(id => ({skill:id}));
+  if (mode === 'practice') return Array.from({length:N}, () => ({skill:opt.skill}));
+  if (mode === 'uni') {
+    const ids = TOPO.filter(id => !['side', 'duel'].includes(SK[id].kind));
+    // easy → hard with a little jitter
+    return Array.from({length:N}, (_, i) => { const pos = clamp(Math.floor((i + rnd() * 2.2) / N * ids.length), 0, ids.length - 1); return {skill:ids[pos]}; });
+  }
+  // "特训": review a few mastered skills, then rotate through the frontier
+  const mastered = TOPO.filter(isMastered);
+  const frontier = TOPO.filter(id => isUnlocked(id) && !isMastered(id)).slice(0, 4);
+  const nRev = mastered.length ? Math.min(mastered.length, Math.max(1, Math.round(N * .3))) : 0;
+  const rusty = rustyList();
+  const revPool = [...rusty, ...shuffle(mastered.slice(-6).filter(id => !rusty.includes(id)))];
+  const rev = Array.from({length:nRev}, (_, i) => revPool[i % revPool.length]);
+  const main = frontier.length ? frontier : mastered;
+  const rest = Array.from({length:N - nRev}, (_, i) => main[i % main.length]);
+  // spread review questions through the run
+  const out = rest.map(id => ({skill:id}));
+  rev.forEach((id, i) => out.splice(Math.min(out.length, Math.round((i + 1) * N / (nRev + 1))), 0, {skill:id}));
+  return out;
+}
+function extraSkills() {
+  const m = P.mode;
+  if (m === 'practice') { const kids = SKILLS.filter(s => s.req.includes(P.opt.skill) && isUnlocked(s.id)).map(s => s.id); return kids.length ? kids : [P.opt.skill]; }
+  if (m === 'uni') return TOPO.filter(id => !['side', 'duel'].includes(SK[id].kind)).slice(-6);
+  const un = TOPO.filter(id => isUnlocked(id) && !isMastered(id));
+  const pool = (un.length ? un : TOPO.filter(isMastered)).slice(-3);
+  return pool.length ? pool : ['side1', 'item1'];
+}
+function startSession(mode, opt = {}) {
+  AU.init(); AU.resume();
+  const queue = planQueue(mode, opt);
+  if (!queue.length) { toast('没有可以出的题'); return; }
+  P = {mode, opt, uni: opt.uni || null, queue, N:queue.length, idx:0, combo:0, maxCombo:0, L:0, ok:0, miss:0, firstTry:0, start:performance.now(),
+    extra:false, extraEnd:0, extraSolved:0, extraScore:0, avoid:new Set(S.recent), newCodex:[], before:snapSkills(), placementMisses:0, placed:[], qlog:[]};
+  AU.stage = 0; FX.stage = 0; AU.start();
+  show('scr-play');
+  $('#mascot-play').innerHTML = mascotSVG();
+  updateMute();
+  nextQuestion();
+  requestAnimationFrame(tickPlay);
+}
+const snapSkills = () => Object.fromEntries(SKILLS.map(s => [s.id, {m:isMastered(s.id), st:S.skills[s.id]?.st || 0}]));
+function nextQuestion() {
+  if (!P) return;
+  if (!P.extra && P.idx >= P.N) return finishBasic();
+  if (P.extra && performance.now() >= P.extraEnd) return finishExtra();
+  let q;
+  if (P.extra) { q = genQ(pick(P.extraPool), {uni:P.uni, avoid:P.avoid}); }
+  else {
+    const item = P.queue[P.idx];
+    if (item.review) { q = JSON.parse(JSON.stringify(item.review)); q.r = 0; q.fromReview = true; }
+    else q = genQ(item.skill, {uni:P.uni, avoid:P.avoid});
+    if (!q) q = genQ('item1', {uni:P.uni, avoid:P.avoid});
+  }
+  P.avoid.add(q.sig);
+  S.recent.push(q.sig); if (S.recent.length > 24) S.recent.shift();
+  q.wrong = 0; q.hinted = false; q.done = false; q.t0 = performance.now();
+  P.q = q;
+  P.comboDeadline = performance.now() + comboBudget(q);
+  renderQuestion(q);
+}
+const AVA_KINDS = new Set(['item', 'power', 'real', 'foe', 'villain', 'duel', 'clue']);
+const qArt = img => !img ? '' : img.t === 'item' ? itemArt(img.id, img.k) : portrait(img.id, img.t === 'sil');
+const comboBudget = q => COMBO_MS + (q.kind === 'clue' ? 3500 * (q.r || 0) : 0) + (q.small ? 2000 : 0);
+function renderQuestion(q) {
+  const k = KIND[q.kind];
+  const card = $('#qcard');
+  let body = '';
+  if (q.kind === 'clue') {
+    body = `<ol class="clues">${q.clues.map((c, i) => i <= q.r ? `<li class="on">${esc(c)}</li>` : `<li class="off">线索 ${i + 1} 未揭开</li>`).join('')}</ol>` +
+      (q.r < q.clues.length - 1 ? `<button class="hintbtn" data-act="hint">揭开下一条线索</button>` : '');
+  } else {
+    let txt = '';
+    if (q.main) txt += `<div class="qmain${q.small ? ' small' : ''}">${esc(q.main)}</div>`;
+    if (q.sub) txt += `<div class="qsub">${esc(q.sub)}</div>`;
+    const art = qArt(q.img);
+    if (q.sw) body += `<div class="sw">${q.sw.map(c => `<i style="background:${c}"></i>`).join('')}</div>` + txt;
+    else if (art && (q.kind === 'face' || q.kind === 'shadow')) body += `<div class="qart big ${q.img.t}" id="qart">${art}</div>` + txt;
+    else if (art) body += `<div class="qrow"><div class="qart ${q.img.t}" id="qart">${art}</div><div class="qtext">${txt}</div></div>`;
+    else body += txt;
+  }
+  card.innerHTML = `<div class="qhead"><span class="kchip">${k.label}</span>${P.extra ? '<span class="xchip">加时</span>' : ''}${q.fromReview ? '<span class="rchip">复习</span>' : ''}<span class="qtitle">${k.title}</span></div>${body}<div id="factbox"></div>`;
+  card.classList.remove('enter'); void card.offsetWidth; card.classList.add('enter');
+  const two = q.opts.length === 2;
+  $('#opts').className = 'opts' + (two ? ' two' : '');
+  const ava = AVA_KINDS.has(q.kind);
+  $('#opts').innerHTML = q.opts.map((o, i) => `<button class="opt${ava && o.id && LOOK[o.id] ? ' ava' : ''}" data-i="${i}"><span class="okey">${i + 1}</span>${ava && o.id && LOOK[o.id] ? `<span class="oav">${portrait(o.id)}</span>` : ''}<span class="otx">${o.u && (q.kind === 'side' || q.kind === 'duel') ? uchip(o.u) : ''}<b>${esc(o.t)}</b>${o.s ? `<small>${esc(o.s)}</small>` : ''}</span></button>`).join('');
+  $('#tapnext').innerHTML = '&nbsp;';
+  updateHud();
+}
+function updateHud() {
+  const p = P; if (!p) return;
+  if (p.extra) { $('#prog-txt').textContent = `加时 ${p.extraSolved}`; $('#prog-fill').style.width = '100%'; }
+  else { $('#prog-txt').textContent = `${Math.min(p.idx + 1, p.N)} / ${p.N}`; $('#prog-fill').style.width = (p.idx / p.N * 100) + '%'; }
+  $('#energy').textContent = fmtEnergy(p.L);
+  $('#combo-n').textContent = p.combo;
+  $('#combo-x').textContent = p.combo >= 20 ? '能量 ×2 MAX' : `能量 ×${mult(p.combo).toFixed(2).replace(/0$/, '')}`;
+  $('#combo').classList.toggle('on', p.combo >= 2);
+}
+function tickPlay() {
+  if (!P || $('#scr-play').hidden) return;
+  const now = performance.now();
+  const clock = $('#clock');
+  if (P.extra) { const left = P.extraEnd - now; clock.textContent = fmtTime(left); clock.className = 'clock extra' + (left < 10000 ? ' warn' : ''); if (left <= 0 && !P.q?.done) { finishExtra(); return; } }
+  else { clock.textContent = fmtTime(now - P.start); clock.className = 'clock'; }
+  const modalOpen = !$('#modal').hidden;
+  if (P.q && !P.q.done && modalOpen) P.comboDeadline += 16; // the combo clock pauses behind dialogs
+  else if (P.q && !P.q.done) {
+    const left = P.comboDeadline - now, frac = clamp(left / comboBudget(P.q), 0, 1);
+    $('#combo-fill').style.width = (P.combo >= 1 ? frac * 100 : 0) + '%';
+    $('#ctime').classList.toggle('low', frac < .3);
+    if (left <= 0 && P.combo > 0) { if (P.combo >= 5) toast(`${P.combo} 连击结束`); P.combo = 0; updateHud(); }
+  }
+  requestAnimationFrame(tickPlay);
+}
+function answer(i) {
+  const q = P?.q; if (!q || q.done) return;
+  const btn = $(`#opts .opt[data-i="${i}"]`); if (!btn || btn.classList.contains('ng')) return;
+  if (i === q.ans) return onCorrect(q, btn);
+  // 差一点: mark it, keep everything else
+  q.wrong++; P.miss++; P.combo = 0;
+  btn.classList.add('ng'); btn.insertAdjacentHTML('beforeend', '<em class="ngtag">差一点</em>');
+  AU.wrong(); mascot('oops', 600);
+  if (q.kind === 'clue' && q.r < q.clues.length - 1) revealClue(q);
+  if (P.mode === 'placement') P.placementMisses++;
+  updateHud();
+}
+function revealClue(q) {
+  q.r++;
+  const lis = $$('#qcard .clues li');
+  if (lis[q.r]) { lis[q.r].className = 'on new'; lis[q.r].textContent = q.clues[q.r]; }
+  if (q.r >= q.clues.length - 1) $('#qcard .hintbtn')?.remove();
+  P.comboDeadline += 3500;
+}
+function onCorrect(q, btn) {
+  q.done = true;
+  const now = performance.now(), ms = now - q.t0;
+  const first = q.wrong === 0 && !q.hinted;
+  P.combo = performance.now() <= P.comboDeadline || P.combo === 0 ? P.combo + 1 : 1;
+  P.maxCombo = Math.max(P.maxCombo, P.combo);
+  P.ok++; if (first) P.firstTry++;
+  // energy
+  const before = P.L;
+  let inc;
+  if (P.extra) inc = Xc(P.extraSolved + 1) - Xc(P.extraSolved);
+  else inc = Bc((P.idx + 1) / P.N) - Bc(P.idx / P.N);
+  P.L = Math.min(9.08, P.L + Math.max(.003, inc) * mult(P.combo));
+  // score
+  if (P.extra) { P.extraScore += 10 + 5 * P.extraSolved; P.extraSolved++; }
+  // learning records
+  {
+    const sid = q.skill;
+    const wasMastered = sid && isMastered(sid);
+    if (sid) noteSkill(sid, first, ms);
+    if (sid && !wasMastered) questEv('learn');
+    if (P.mode === 'placement' && first && sid && SK[sid].req.every(isMastered) && !isMastered(sid)) { const r = skRec(sid); r.m = Date.now(); r.st = 1; r.lastOk = Date.now(); P.placed.push(sid); }
+    if (q.ent) { if (!S.codex[q.ent]) { P.newCodex.push(q.ent); questEv('codex'); } S.codex[q.ent] = (S.codex[q.ent] || 0) + 1; }
+    if (first) questEv('first');
+    questEv('combo', P.combo);
+    if (q.kind === 'duel') questEv('duel');
+    if (q.fromReview) {
+      if (first) { S.review = S.review.filter(r => r.sig !== q.sig); S.stats.reviewSolved++; questEv('review'); }
+    } else if (!first && P.mode !== 'placement') {
+      const keep = {...q}; delete keep.t0; delete keep.done; delete keep.wrong; delete keep.hinted; keep.r = 0;
+      S.review = S.review.filter(r => r.sig !== q.sig); S.review.push(keep); if (S.review.length > 40) S.review.shift();
+    }
+    P.qlog.push({first, kind:q.kind});
+    save();
+  }
+  // feedback
+  btn.classList.add('ok');
+  $$('#opts .opt').forEach(b => { if (b !== btn && !b.classList.contains('ng')) b.classList.add('dim'); });
+  const r = btn.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+  const st = stageOf(P.L);
+  FX.burst(cx, cy, 14 + st * 8, ['#ffd23f', '#ef3d3d', '#3d7bff', '#33d69a', '#f7f1e3']);
+  FX.ring(cx, cy);
+  if (st >= 4) comicPop(cx + (rnd() - .5) * 120, r.top - 50 - rnd() * 60);
+  if (st >= 6 && rnd() < .35) FX.strike();
+  if (st >= 7 && S.settings.motion === 'high') { const a = $('#app'); a.classList.remove('shake'); void a.offsetWidth; a.classList.add('shake'); }
+  AU.correct(P.combo); mascot('cheer', 650);
+  if (st !== FX.stage) { FX.stage = st; AU.stage = st; mascotDance(st >= 5); }
+  // energy milestones (100, 1000, 1万 …)
+  for (let m = 2; m <= 9; m++) if (before < m && P.L >= m) { banner(`能量 ${fmtEnergy(m)}`, 'ENERGY UP'); AU.milestone(); FX.flash = .25 * FX.k; break; }
+  const eb = $('#energy'); eb.classList.remove('bump'); void eb.offsetWidth; eb.classList.add('bump');
+  if (P.combo > 0 && [10, 20, 30, 50, 75, 100].includes(P.combo)) banner(`${P.combo} 连击！`, 'COMBO');
+  // the answer's dossier
+  const e = BYID[q.ent];
+  if (q.kind === 'shadow' && $('#qart')) { $('#qart').className = 'qart big pt reveal'; $('#qart').innerHTML = portrait(q.ent); }
+  if (e) $('#factbox').innerHTML = `<div class="fact"><span class="fav">${portrait(e.id)}</span><span>${q.note ? `这件道具叫<b>「${esc(q.note)}」</b>。` : ''}${uchip(e.u)}<b>${esc(e.zh)}</b>：${esc(e.fact)}</span></div>`;
+  if (!P.extra) P.idx++;
+  updateHud();
+  $('#tapnext').textContent = P.extra ? '' : '点一下继续';
+  clearTimeout(P.nextTimer);
+  P.nextTimer = setTimeout(goNext, P.extra ? 650 : 1900);
+}
+function goNext() { if (!P || !P.q?.done) return; clearTimeout(P.nextTimer); if (P.mode === 'placement' && P.placementMisses >= 3) return finishBasic(); nextQuestion(); }
+
+function finishBasic() {
+  const p = P, ms = performance.now() - p.start, day = dayKey();
+  const rate = p.N ? p.firstTry / p.N : 0;
+  S.stats.plays++; S.stats.solved += p.ok; S.stats.firstTry += p.firstTry;
+  S.stats.maxCombo = Math.max(S.stats.maxCombo, p.maxCombo); S.stats.bestL = Math.max(S.stats.bestL, p.L);
+  if (rate === 1 && p.mode !== 'review') S.stats.perfects++;
+  if (p.mode === 'uni') S.stats[p.uni === 'M' ? 'marvelPlays' : 'dcPlays']++;
+  if (p.mode === 'placement') S.placed = true;
+  S.days[day] = S.days[day] || {plays:0, best:0}; S.days[day].plays++; S.days[day].best = Math.max(S.days[day].best, 100);
+  p.histEntry = {t:Date.now(), mode:p.mode, n:p.N, ft:p.firstTry, score:100, L:p.L, ms:Math.round(ms)};
+  S.hist.push(p.histEntry); if (S.hist.length > 500) S.hist.shift();
+  questEv('play');
+  save();
+  p.basicMs = ms; p.rate = rate;
+  p.canExtra = rate >= .8 && !['review', 'placement'].includes(p.mode);
+  p.q = null;
+  renderResult(false);
+  AU.fanfare();
+  checkTrophies();
+}
+function startExtra() {
+  const p = P; if (!p) return;
+  p.extra = true; p.extraEnd = performance.now() + N_EXTRA_MS + 900; p.combo = 0; p.extraPool = extraSkills();
+  S.stats.extras++; questEv('extra'); save();
+  show('scr-play'); $('#mascot-play').innerHTML = mascotSVG(); mascotDance(FX.stage >= 5);
+  AU.start(); AU.alarm(); banner('加时赛', '60 秒 · 答对越多分越高');
+  setTimeout(() => { nextQuestion(); requestAnimationFrame(tickPlay); }, 900);
+}
+function finishExtra() {
+  const p = P; if (!p || p.extraDone) return;
+  p.extraDone = true; clearTimeout(p.nextTimer); p.q = null;
+  S.stats.extraBest = Math.max(S.stats.extraBest, p.extraSolved);
+  S.stats.maxCombo = Math.max(S.stats.maxCombo, p.maxCombo); S.stats.bestL = Math.max(S.stats.bestL, p.L);
+  if (p.histEntry) { p.histEntry.score = 100 + p.extraScore; p.histEntry.L = p.L; p.histEntry.extra = p.extraSolved; }
+  const d = S.days[dayKey()]; if (d) d.best = Math.max(d.best, 100 + p.extraScore);
+  save();
+  banner('时间到！', 'TIME UP'); AU.fanfare();
+  setTimeout(() => { renderResult(true); checkTrophies(); }, 900);
+}
+function quitSession() { if (P) clearTimeout(P.nextTimer); P = null; AU.stop(); FX.stage = 2; AU.stage = 0; renderTitle(); show('scr-title'); }
+
+// ------------------------------------------------------------------ screens
+function renderTitle() {
+  ensureQuests();
+  const st = streak();
+  const placedHint = !S.placed && !S.stats.plays;
+  const front = TOPO.filter(id => isUnlocked(id) && !isMastered(id));
+  const rusty = rustyList();
+  $('#scr-title').innerHTML = `
+  <div class="t-top"><span class="streak">连续 <b>${st}</b> 天 · 今日 ${S.days[dayKey()]?.plays || 0} 局</span><button class="help-link" data-act="help">怎么玩？</button></div>
+  <div class="logo"><div><h1>英雄雷达<span>MARVEL × DC</span></h1><p>看头像、认道具、猜剪影。答得越多，画面和音乐越燃。</p></div>${mascotSVG()}</div>
+  <button class="strip" data-act="codex" aria-label="打开图鉴">${shuffle(ENT, seeded('strip' + dayKey())).slice(0, 7).map(e => `<span class="${S.codex[e.id] ? '' : 'sil'}">${portrait(e.id, !S.codex[e.id])}</span>`).join('')}</button>
+  <div class="mainbtns">
+    <button class="btn primary big" data-act="start" autofocus>开始特训<small>${front.length ? '当前：' + front.slice(0, 3).map(id => SK[id].name).join('、') : '复习已掌握的全部技能'}</small></button>
+    ${placedHint ? `<button class="btn" data-act="placement">老粉跳级测验<small>每项技能一题，答对直接掌握</small></button>` : ''}
+    <div class="row">
+      <button class="btn red" data-act="uni" data-u="M">漫威专场</button>
+      <button class="btn blue" data-act="uni" data-u="D">DC 专场</button>
+    </div>
+    <button class="btn" data-act="review" ${S.review.length ? '' : 'disabled'}>复习错题<small>${S.review.length ? `已攒 ${S.review.length} 题，首答正确就会移出` : '答错过的题会出现在这里'}</small></button>
+  </div>
+  <div class="card"><h3><span>今日任务</span><span>${S.quests.list.filter(q => q.done).length}/${S.quests.list.length}</span></h3>
+    ${S.quests.list.map(it => { const q = QBY[it.id]; return `<div class="quest${it.done ? ' done' : ''}"><span class="qbox">${it.done ? '✓' : ''}</span><span class="qname">${esc(q.name)}</span><span class="qprog">${it.p}/${q.target}</span></div>`; }).join('')}
+    ${rusty.length ? `<div class="quest"><span class="qbox">!</span><span class="qname">技能“${esc(SK[rusty[0]].name)}”生锈了</span><button class="qpractice" data-act="practice" data-skill="${rusty[0]}">去擦亮</button></div>` : ''}
+  </div>
+  <div class="nav">
+    <button data-act="tree">技能树<b>${masteredN()}/${SKILLS.length}</b></button>
+    <button data-act="codex">图鉴<b>${codexN()}/${ENT.length}</b></button>
+    <button data-act="trophies">成就<b>${Object.keys(S.trophies).length}/${TROPHIES.length}</b></button>
+    <button data-act="settings">设置<b>${S.settings.count}题</b></button>
+  </div>
+  <p class="foot">非官方粉丝学习游戏。角色名称与设定归 Marvel / DC 各自版权方所有。记录只保存在本机浏览器。</p>`;
+  FX.stage = 2; mascotDance(false);
+}
+function renderResult(final) {
+  const p = P;
+  const after = snapSkills();
+  const changes = SKILLS.filter(s => after[s.id].m !== p.before[s.id].m || after[s.id].st !== p.before[s.id].st)
+    .map(s => ({s, newM:after[s.id].m && !p.before[s.id].m, st:after[s.id].st}));
+  const newly = SKILLS.filter(s => isUnlocked(s.id) && !SK[s.id].req.every(id => p.before[id].m));
+  const score = final ? 100 + p.extraScore : 100;
+  const title = final ? '加时赛结束' : p.mode === 'placement' ? '跳级测验完成' : p.mode === 'review' ? '复习完成' : '特训完成';
+  const stat = (k, v) => `<div class="stat"><small>${k}</small><b>${v}</b></div>`;
+  $('#scr-result').innerHTML = `
+  <div class="res-hero"><div><h2>${title}</h2><div class="score">${score}<small> 分</small></div></div>${mascotSVG()}</div>
+  <div class="stats">
+    ${final ? stat('加时答对', p.extraSolved) + stat('加时得分', '+' + p.extraScore) : stat('用时', fmtTime(p.basicMs)) + stat('首答正确', Math.round(p.rate * 100) + '%')}
+    ${stat('最高连击', p.maxCombo)}${stat('能量', fmtEnergy(p.L))}
+  </div>
+  ${p.mode === 'placement' ? `<div class="card"><h3>跳级结果</h3>${p.placed.length ? `<ul class="reslist">${p.placed.map(id => `<li><span class="tag">直接掌握</span>${esc(SK[id].name)}</li>`).join('')}</ul>` : '<p class="muted">这次没有跳过的技能，从基础开始练吧。</p>'}</div>` : ''}
+  ${changes.length || newly.length ? `<div class="card"><h3>技能变化</h3><ul class="reslist">
+    ${changes.map(c => `<li><span class="tag ${c.newM ? '' : 'up'}">${c.newM ? '新掌握' : '升星'}</span>${esc(c.s.name)} <span style="color:var(--pop)">${stars(c.st)}</span></li>`).join('')}
+    ${newly.map(s => `<li><span class="tag new">解锁</span>${esc(s.name)}</li>`).join('')}
+  </ul></div>` : ''}
+  ${p.newCodex.length ? `<div class="card"><h3><span>新收入图鉴</span><span>${codexN()}/${ENT.length}</span></h3><div class="newcx">${p.newCodex.map(id => `<span>${esc(BYID[id].zh)}</span>`).join('')}</div></div>` : ''}
+  <div class="card"><h3><span>今日任务</span><span>${S.quests.list.filter(q => q.done).length}/${S.quests.list.length}</span></h3>
+    ${S.quests.list.map(it => { const q = QBY[it.id]; return `<div class="quest${it.done ? ' done' : ''}"><span class="qbox">${it.done ? '✓' : ''}</span><span class="qname">${esc(q.name)}</span><span class="qprog">${it.p}/${q.target}</span></div>`; }).join('')}
+  </div>
+  <div class="res-actions">
+    ${!final && p.canExtra ? `<button class="btn primary big" data-act="extra">进入加时赛<small>60 秒，第 k 题 +10+5k 分</small></button>` : ''}
+    ${!final && !p.canExtra && !['review', 'placement'].includes(p.mode) ? `<p class="extra-note">首答正确率达到 80% 就能进入加时赛（这次 ${Math.round(p.rate * 100)}%）</p>` : ''}
+    <div class="row"><button class="btn" data-act="again">再来一局</button><button class="btn" data-act="home">返回首页</button></div>
+  </div>`;
+  show('scr-result');
+  mascot('cheer', 900);
+}
+function renderTree() {
+  const rows = [];
+  SKILLS.forEach(s => { const d = depthOf(s.id); (rows[d] ??= []).push(s); });
+  const node = s => {
+    const st = skillStatus(s.id), r = S.skills[s.id];
+    const lab = {lock:'未解锁', new:'可以练习', learn:'练习中', master:'已掌握', rust:'已掌握'}[st];
+    const prog = st === 'learn' ? `<div class="rbar"><i style="width:${Math.min(100, r.h.slice(-6).filter(x => x.ok).length / 5 * 100)}%"></i></div>` : '';
+    return `<button class="node ${st === 'rust' ? 'master rust' : st}" data-act="skill" data-skill="${s.id}" id="n-${s.id}"><b>${esc(s.name)}</b><small>${lab}</small>${prog}<span class="stars">${r?.st ? stars(r.st) : ''}</span></button>`;
+  };
+  $('#scr-tree').innerHTML = `
+  <div class="subhead"><button class="ibtn" data-act="home" aria-label="返回">←</button><h2>技能树</h2><span class="muted">${masteredN()}/${SKILLS.length}</span></div>
+  <div class="legend"><span><i style="background:var(--pop);border-color:var(--edge)"></i>已掌握</span><span><i style="border-color:var(--blue)"></i>练习中</span><span><i style="border-color:var(--pop)"></i>新解锁</span><span><i style="border-style:dashed"></i>未解锁</span></div>
+  <div class="tree" id="tree"><svg class="tlines" id="tlines"></svg>${rows.map(r => `<div class="trow c${Math.min(4, r.length)}">${r.map(node).join('')}</div>`).join('')}</div>
+  <p class="muted" style="font-size:13px;margin:0">最近 6 题里首答正确 5 题即可掌握。掌握后继续练习可以升到 ★★★；14 天没答对会生锈。</p>`;
+  show('scr-tree');
+  requestAnimationFrame(drawTreeLines);
+}
+function drawTreeLines() {
+  const tree = $('#tree'), svg = $('#tlines'); if (!tree || !svg) return;
+  const tr = tree.getBoundingClientRect();
+  let paths = '';
+  for (const s of SKILLS) for (const req of s.req) {
+    const a = $('#n-' + req).getBoundingClientRect(), b = $('#n-' + s.id).getBoundingClientRect();
+    const x1 = a.left + a.width / 2 - tr.left, y1 = a.bottom - tr.top, x2 = b.left + b.width / 2 - tr.left, y2 = b.top - tr.top;
+    const my = (y1 + y2) / 2;
+    const on = isMastered(req);
+    paths += `<path d="M${x1} ${y1} C${x1} ${my} ${x2} ${my} ${x2} ${y2}" fill="none" stroke="${on ? 'var(--pop)' : 'rgba(247,241,227,.22)'}" stroke-width="${on ? 3 : 2}" ${on ? '' : 'stroke-dasharray="4 5"'}/>`;
+  }
+  svg.innerHTML = paths;
+}
+function skillSheet(id) {
+  const s = SK[id], st = skillStatus(id), r = S.skills[id];
+  const h = r?.h || [];
+  const last6 = h.slice(-6).filter(x => x.ok).length;
+  const okMs = h.slice(-10).filter(x => x.ok).map(x => x.ms);
+  let next = '';
+  if (st === 'lock') next = '先掌握：' + s.req.filter(x => !isMastered(x)).map(x => SK[x].name).join('、');
+  else if (!r?.m) next = `掌握条件：最近 6 题里首答正确 5 题（现在 ${last6}/5，已答 ${h.length} 题）`;
+  else if (r.st < 2) next = `★★ 条件：最近 12 题里首答正确 11 题（现在 ${h.slice(-12).filter(x => x.ok).length}/11）`;
+  else if (r.st < 3) next = `★★★ 条件：最近 10 题首答正确 9 题，且用时中位数 ≤ 5 秒（现在 ${h.slice(-10).filter(x => x.ok).length}/9，${okMs.length ? (median(okMs) / 1000).toFixed(1) + ' 秒' : '—'}）`;
+  else next = '已满星。保持练习，别让它生锈。';
+  openModal(`<h2>${esc(s.name)} <span class="chip" style="background:var(--panel-2)">${KIND[s.kind].label}</span><button class="ibtn x" data-act="close" aria-label="关闭">✕</button></h2>
+    <p>${esc(s.desc)}</p>
+    <dl class="kv"><dt>状态</dt><dd>${{lock:'未解锁', new:'可以练习', learn:'练习中', master:'已掌握', rust:'已掌握（生锈）'}[st]} ${r?.st ? `<span style="color:var(--pop)">${stars(r.st)}</span>` : ''}</dd>
+    <dt>下一步</dt><dd>${esc(next)}</dd>
+    <dt>角色范围</dt><dd>${['', '家喻户晓', '主流角色', '冷门角色'][s.lo]}${s.hi > s.lo ? ' ～ ' + ['', '家喻户晓', '主流角色', '冷门角色'][s.hi] : ''}</dd>
+    ${s.req.length ? `<dt>前置</dt><dd>${s.req.map(x => SK[x].name).join('、')}</dd>` : ''}</dl>
+    <button class="btn primary" data-act="practice" data-skill="${id}" ${st === 'lock' ? 'disabled' : ''}>练习这一项</button>`);
+}
+let cxFilter = 'all', cxQuery = '';
+function renderCodex() {
+  $('#scr-codex').innerHTML = `
+  <div class="subhead"><button class="ibtn" data-act="home" aria-label="返回">←</button><h2>图鉴</h2><span class="muted">${codexN()}/${ENT.length}</span></div>
+  <div class="cxbar"><input id="cx-q" type="search" placeholder="搜索名字、英文名" value="${esc(cxQuery)}" aria-label="搜索角色">
+    <div class="fchips">${[['all','全部'],['M','漫威'],['D','DC'],['got','已收集'],['v','反派']].map(([k, n]) => `<button data-act="cxf" data-f="${k}" aria-pressed="${cxFilter === k}">${n}</button>`).join('')}</div></div>
+  <div class="cxgrid" id="cxgrid"></div>
+  <p class="muted" style="font-size:13px;margin:0">答对一道以 TA 为答案的题，就能解锁 TA 的档案。</p>`;
+  fillCodex();
+  show('scr-codex');
+}
+function fillCodex() {
+  const q = cxQuery.trim().toLowerCase();
+  const list = ENT.filter(e => (cxFilter === 'all' || (cxFilter === 'got' ? S.codex[e.id] : cxFilter === 'v' ? e.v : e.u === cxFilter)))
+    .filter(e => !q || (S.codex[e.id] && (e.zh + e.en).toLowerCase().includes(q)));
+  $('#cxgrid').innerHTML = list.map(e => {
+    const n = S.codex[e.id] || 0, got = n > 0;
+    const lv = n >= 8 ? '★★★' : n >= 3 ? '★★' : n ? '★' : '';
+    return `<button class="cx${got ? '' : ' locked'}" data-act="cx" data-id="${e.id}"><span class="face">${portrait(e.id, !got)}</span><span class="band">${e.col.map(c => `<i style="background:${c}"></i>`).join('')}</span><span class="nm"><b>${got ? esc(e.zh) : '？？？'}</b><small>${got ? esc(e.en) : (e.u === 'M' ? '漫威' : 'DC') + ' · 未解锁'}</small>${lv ? `<span class="lv">${lv}</span>` : ''}</span></button>`;
+  }).join('') || '<p class="muted">没有符合条件的角色。</p>';
+}
+function codexSheet(id) {
+  const e = BYID[id], n = S.codex[id] || 0;
+  if (!n) { openModal(`<h2>？？？ ${uchip(e.u)}<button class="ibtn x" data-act="close" aria-label="关闭">✕</button></h2><div class="cxhead"><span class="cxpt sil">${portrait(id, true)}</span></div><p class="muted">还没解锁。在游戏里答对一道以 TA 为答案的题就能看到完整档案。</p><p>提示：${esc(e.cl[0])}</p>`); return; }
+  const foe = e.foe ? (BYID[e.foe]?.zh || e.foe) : '';
+  openModal(`<h2>${esc(e.zh)} ${uchip(e.u)} ${e.v ? '<span class="chip" style="background:var(--panel-2)">反派</span>' : ''}<button class="ibtn x" data-act="close" aria-label="关闭">✕</button></h2>
+    <p class="muted" style="margin-top:-8px">${esc(e.en)} · 认识度 ${n >= 8 ? '★★★' : n >= 3 ? '★★' : '★'}（答对 ${n} 次）</p>
+    <div class="cxhead"><span class="cxpt">${portrait(id)}</span>${e.it.map((it, k) => `<span class="cxit" title="${esc(it[0])}">${itemArt(id, k)}<small>${esc(it[0])}</small></span>`).join('')}</div>
+    <div class="bigsw">${e.col.map(c => `<i style="background:${c}"></i>`).join('')}</div>
+    <dl class="kv">
+      ${e.real ? `<dt>真实身份</dt><dd>${esc(e.real)}</dd>` : ''}
+      ${e.team ? `<dt>团队</dt><dd>${esc(TEAMS[e.team].n)}</dd>` : ''}
+      ${e.home ? `<dt>地盘</dt><dd>${esc(e.home)}</dd>` : ''}
+      ${foe ? `<dt>头号宿敌</dt><dd>${esc(foe)}</dd>` : ''}
+      <dt>能力</dt><dd>${esc(e.pw[0])}</dd>
+      ${e.it.length ? `<dt>道具</dt><dd>${e.it.map(i => `<b>${esc(i[0])}</b>：${esc(i[1])}`).join('<br>')}</dd>` : ''}
+      <dt>线索</dt><dd>${e.cl.map(esc).join(' / ')}</dd>
+      <dt>冷知识</dt><dd>${esc(e.fact)}</dd>
+    </dl>`);
+}
+function trophiesSheet() {
+  openModal(`<h2>成就 <span class="muted" style="font-size:16px">${Object.keys(S.trophies).length}/${TROPHIES.length}</span><button class="ibtn x" data-act="close" aria-label="关闭">✕</button></h2>
+  <div>${TROPHIES.map(t => { const got = S.trophies[t.id]; const v = t.v(); const f = t.f || (x => Math.floor(x)); return `<div class="troph${got ? ' got' : ''}"><span class="medal">${got ? '★' : Math.min(99, Math.floor(clamp(v / t.t, 0, 1) * 100)) + '%'}</span><span><b>${esc(t.n)}</b><small>${esc(t.d)}${got ? ' · ' + new Date(got).toLocaleDateString('zh-CN') : ''}</small></span><span class="tp">${got ? '' : `${f(Math.min(v, t.t))}/${f(t.t)}`}</span></div>`; }).join('')}</div>`);
+}
+function settingsSheet() {
+  const s = S.settings;
+  const seg = (key, opts) => `<div class="seg">${opts.map(([v, n]) => `<button data-act="set" data-k="${key}" data-v="${v}" aria-pressed="${String(s[key]) === String(v)}">${n}</button>`).join('')}</div>`;
+  openModal(`<h2>设置<button class="ibtn x" data-act="close" aria-label="关闭">✕</button></h2>
+    <div class="setrow"><span>每局题数</span>${seg('count', [[6, '6 题'], [10, '10 题'], [14, '14 题']])}</div>
+    <div class="setrow"><span>音乐</span>${seg('music', [[true, '开'], [false, '关']])}</div>
+    <div class="setrow"><span>音效</span>${seg('sfx', [[true, '开'], [false, '关']])}</div>
+    <div class="setrow"><span>音量</span>${seg('vol', [[.35, '小'], [.7, '中'], [1, '大']])}</div>
+    <div class="setrow"><span>画面动效</span>${seg('motion', [['low', '弱'], ['mid', '中'], ['high', '强（含震屏）']])}</div>
+    <div class="setrow"><span>数据</span><button class="btn" data-act="reset1" style="justify-self:start">清空全部记录…</button></div>`);
+}
+function helpSheet() {
+  openModal(`<h2>怎么玩<button class="ibtn x" data-act="close" aria-label="关闭">✕</button></h2>
+  <ul>
+    <li><b>四选一认角色</b>：看头像、认道具、猜剪影，再到能力、真名、宿敌……题型跟着技能树一项项解锁。</li>
+    <li><b>不会结束</b>：选错只会标“差一点”，换一个再选，答对为止。全部答完就是 100 分。</li>
+    <li><b>越答越燃</b>：连击越高，能量涨得越快（最高 ×2）。能量越高，背景、漫画拟声词和配乐会一层层叠上来。</li>
+    <li><b>加时赛</b>：首答正确率达到 80% 可以进入 60 秒加时，第 k 题加 10+5k 分，没有上限。</li>
+    <li><b>记住它</b>：答错的题进复习；答对的角色进图鉴；掌握的技能 14 天没碰会生锈。</li>
+    <li>电脑上可以用数字键 1–4 作答，回车继续。</li>
+  </ul>
+  <button class="btn primary" data-act="close" autofocus>知道了</button>`);
+}
+function updateMute() { $('#mute-btn').classList.toggle('off', !S.settings.music && !S.settings.sfx); }
+
+// ------------------------------------------------------------------ events
+document.addEventListener('pointerdown', () => { AU.init(); AU.resume(); }, {once:false, passive:true});
+document.addEventListener('click', e => {
+  const opt = e.target.closest('#opts .opt');
+  if (opt && P?.q && !P.q.done) { answer(+opt.dataset.i); return; }
+  if (P?.q?.done && e.target.closest('#scr-play') && !e.target.closest('[data-act]')) { goNext(); return; }
+  if (e.target === $('#modal') && $('#modal').dataset.dismiss) { closeModal(); return; }
+  const a = e.target.closest('[data-act]'); if (!a) return;
+  const act = a.dataset.act;
+  switch (act) {
+    case 'start': startSession('adaptive'); break;
+    case 'placement': startSession('placement'); break;
+    case 'uni': startSession('uni', {uni:a.dataset.u}); break;
+    case 'review': startSession('review'); break;
+    case 'practice': closeModal(); startSession('practice', {skill:a.dataset.skill}); break;
+    case 'extra': startExtra(); break;
+    case 'again': { const m = P?.mode || 'adaptive', o = P?.opt || {}; startSession(m === 'review' && !S.review.length ? 'adaptive' : m === 'placement' ? 'adaptive' : m, o); break; }
+    case 'home': if (P) { P = null; AU.stop(); } renderTitle(); show('scr-title'); break;
+    case 'tree': renderTree(); break;
+    case 'codex': renderCodex(); break;
+    case 'trophies': trophiesSheet(); break;
+    case 'settings': settingsSheet(); break;
+    case 'help': helpSheet(); break;
+    case 'close': closeModal(); if (!S.seenHelp) { S.seenHelp = true; save(); } break;
+    case 'skill': skillSheet(a.dataset.skill); break;
+    case 'cx': codexSheet(a.dataset.id); break;
+    case 'cxf': cxFilter = a.dataset.f; $$('.fchips button').forEach(b => b.setAttribute('aria-pressed', b.dataset.f === cxFilter)); fillCodex(); break;
+    case 'hint': if (P?.q && !P.q.done) { P.q.hinted = true; revealClue(P.q); } break;
+    case 'mute': { const on = !(S.settings.music || S.settings.sfx); S.settings.music = on; S.settings.sfx = on; save(); updateMute(); break; }
+    case 'quit':
+      if (P?.extra) { finishExtra(); break; }
+      openModal(`<h2>退出这一局？</h2><p>已经答过的题会保留学习记录，但这局不计分。</p><div class="mainbtns"><div class="row"><button class="btn" data-act="close" autofocus>继续答题</button><button class="btn red" data-act="quit2">退出</button></div></div>`);
+      break;
+    case 'quit2': closeModal(); quitSession(); break;
+    case 'set': {
+      const k = a.dataset.k; let v = a.dataset.v; v = v === 'true' ? true : v === 'false' ? false : isNaN(+v) ? v : +v;
+      S.settings[k] = v; save(); AU.applyVol(); settingsSheet(); renderTitle();
+      if (k === 'motion' && v === 'low') mascotDance(false);
+      break;
+    }
+    case 'reset1': openModal(`<h2>清空全部记录？</h2><p>技能、图鉴、成就、复习题和设置都会被删除，无法恢复。</p><div class="mainbtns"><div class="row"><button class="btn" data-act="close" autofocus>保留</button><button class="btn red" data-act="reset2">清空</button></div></div>`); break;
+    case 'reset2': try { localStorage.removeItem(KEY); } catch (err) {} S = freshState(); save(); closeModal(); renderTitle(); show('scr-title'); toast('记录已清空'); break;
+  }
+});
+document.addEventListener('input', e => { if (e.target.id === 'cx-q') { cxQuery = e.target.value; fillCodex(); } });
+document.addEventListener('keydown', e => {
+  if (!$('#modal').hidden) { if (e.key === 'Escape' && $('#modal').dataset.dismiss) closeModal(); return; }
+  if ($('#scr-play').hidden || !P?.q) return;
+  if (/^[1-4]$/.test(e.key) && !P.q.done) { answer(+e.key - 1); e.preventDefault(); }
+  else if ((e.key === 'Enter' || e.key === ' ') && P.q.done) { goNext(); e.preventDefault(); }
+  else if (e.key === 'Escape') $('[data-act="quit"]').click();
+});
+addEventListener('resize', () => { if (!$('#scr-tree').hidden) drawTreeLines(); });
+document.addEventListener('visibilitychange', () => { if (document.hidden && AU.ctx) AU.ctx.suspend(); else if (AU.ctx && AU.on) AU.ctx.resume(); });
+
+// ------------------------------------------------------------------ boot
+load();
+FX.init();
+renderTitle();
+if (!S.seenHelp) setTimeout(helpSheet, 400);
+setTimeout(checkTrophies, 600);
+</script>
+</body>
+</html>
